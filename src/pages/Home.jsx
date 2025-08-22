@@ -17,7 +17,12 @@ export default function Home() {
           <h1 className="text-2xl font-bold">Your Watchlist</h1>
           <p className="text-gray-600">Track your shows, movies, and more.</p>
         </div>
-        <button className="bg-rose-600 text-white p-2 rounded-lg font-medium hover:bg-rose-800 transition-colors" onClick={() => openModal(<AddItemForm />)}>Add Item</button>
+        <button
+          className="bg-gray-600 text-white p-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+          onClick={() => openModal(<AddItemForm />)}
+        >
+          Add Item
+        </button>
       </div>
       <div className="items-grid">
         {tempItems.map((item) => (
