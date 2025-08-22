@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import useAuthStore from "../store/useAuthStore";
+import { handleSignOut } from "../utils/authHandlers";
 
 const NavBar = () => {
+  const user = useAuthStore((state) => state.user);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const linkClasses = ({ isActive }) =>
@@ -25,6 +29,27 @@ const NavBar = () => {
           <NavLink to="/" onClick={() => setIsOpen(false)}>
             Emprog
           </NavLink>
+        </div>
+
+        {/* Login menu */}
+        <div>
+          {user ? (
+            <button
+              onClick={handleSignOut}
+              className="bg-red-500 px-4 py-2 rounded"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <NavLink to="/login" className="mr-4">
+                Sign In
+              </NavLink>
+              <NavLink to="/auth" className="bg-blue-500 px-4 py-2 rounded">
+                Sign Up
+              </NavLink>
+            </>
+          )}
         </div>
 
         {/* Desktop Menu */}
