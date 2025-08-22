@@ -1,5 +1,6 @@
 import useAuthStore from "../store/useAuthStore";
 import { signIn, signUp, logOut } from "../firebase/auth";
+import { clearLocalItems } from "./itemHandlers";
 
 const extractUserData = (firebaseUser) => {
   if (!firebaseUser) return null;
@@ -45,4 +46,5 @@ export const handleSignOut = async () => {
   const { logout } = useAuthStore.getState();
   await logOut();
   logout();
+  clearLocalItems();
 };
