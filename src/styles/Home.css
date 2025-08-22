@@ -1,0 +1,12 @@
+/* src/styles/Home.css */
+.home-container {
+  @apply p-6 bg-gray-50 min-h-screen;
+}
+
+.home-title {
+  @apply text-3xl font-bold mb-6 text-gray-800;
+}
+
+.items-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
