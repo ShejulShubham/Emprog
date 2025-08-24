@@ -1,18 +1,19 @@
 import { useLoading } from "../context/loadingContext";
 
-export const LoadingScreen = () => {
+export const LoadingScreen = (prop) => {
+  const { addColor } = prop;
   const { isLoading } = useLoading();
 
   if (!isLoading) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50"
       aria-modal="true"
       role="dialog"
     >
       <svg
-        className="w-10 h-10 text-white animate-spin"
+        className="w-10 h-10 text-black animate-spin"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

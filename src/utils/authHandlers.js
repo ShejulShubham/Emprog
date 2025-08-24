@@ -5,7 +5,7 @@ import { clearLocalItems } from "./itemHandlers";
 const extractUserData = (firebaseUser) => {
   if (!firebaseUser) return null;
   return {
-    uid: firebaseUser.uid,
+    uid: firebaseUser.uid,         // ✅ User ID saved
     email: firebaseUser.email,
     displayName: firebaseUser.displayName || "",
     photoURL: firebaseUser.photoURL || "",
@@ -13,38 +13,34 @@ const extractUserData = (firebaseUser) => {
 };
 
 export const handleSignUp = async (email, password) => {
-  const { setUser, setLoading, setError } = useAuthStore.getState();
-  setLoading(true);
+  const { setUser } = useAuthStore.getState();
   try {
     const userCredential = await signUp(email, password);
-    const user = extractUserData(userCredential);
+    const user = extractUserData(userCredential); // ✅ Ensure .user is used
     setUser(user);
-    setError(null);
   } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
+    throw err;
   }
 };
 
 export const handleSignIn = async (email, password) => {
-  const { setUser, setLoading, setError } = useAuthStore.getState();
-  setLoading(true);
+  const { setUser } = useAuthStore.getState();
   try {
     const userCredential = await signIn(email, password);
-    const user = extractUserData(userCredential);
+    const user = extractUserData(userCredential); // ✅ Ensure .user is used
     setUser(user);
-    setError(null);
   } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
+    throw err;
   }
 };
 
 export const handleSignOut = async () => {
-  const { logout } = useAuthStore.getState();
-  await logOut();
-  logout();
-  clearLocalItems();
+  try {
+    await logOut();
+  } finally {
+    const { logout } = useAuthStore.getState();
+    logout();
+    clearLocalItems();
+  }
 };
+

@@ -1,28 +1,53 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLoading } from "../context/loadingContext";
 import { handleSignIn, handleSignUp } from "../utils/authHandlers";
 import { usePageTitle } from "../hooks/usePageTitle";
 
-export default function Auth(props) {
-  const { isRegistration } = props;
-
+export default function Auth({ isRegistration }) {
   const [isSignUp, setIsSignUp] = useState(isRegistration || false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
 
   usePageTitle(isSignUp ? "Registration" : "Log-In");
 
+  const validateForm = () => {
+    if (!email || !password) {
+      setError("All fields are required.");
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Invalid email format.");
+      return false;
+    }
+    if (password.length < 4) {
+      setError("Password must be at least 4 characters.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
+    showLoading();
     try {
       if (isSignUp) {
         await handleSignUp(email, password);
-        alert("Sign Up Successful!");
       } else {
         await handleSignIn(email, password);
-        alert("Sign In Successful!");
       }
-    } catch (error) {
-      alert(error.message);
+      navigate("/dashboard"); // ✅ Redirect on success
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      hideLoading();
     }
   };
 
@@ -33,13 +58,18 @@ export default function Auth(props) {
           {isSignUp ? "Create Account" : "Sign In"}
         </h2>
 
+        {error && (
+          <div className="mb-4 text-red-600 text-sm bg-red-100 p-2 rounded">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
@@ -47,7 +77,6 @@ export default function Auth(props) {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
@@ -62,7 +91,10 @@ export default function Auth(props) {
           {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
           <button
             type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setError(""); // clear error on toggle
+            }}
             className="text-blue-600 hover:underline"
           >
             {isSignUp ? "Sign In" : "Sign Up"}

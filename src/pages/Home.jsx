@@ -1,33 +1,83 @@
-import "../styles/Home.css";
-import ItemCard from "../components/ItemCard";
-import { tempItems } from "../data/tempItems";
+import { useNavigate } from "react-router-dom";
+import { useLoading } from "../context/loadingContext";
+import useAuthStore, { selectIsLoggedIn } from "../store/useAuthStore";
 import { usePageTitle } from "../hooks/usePageTitle";
-import { useModal } from "../context/modalContext";
-import AddItemForm from "../components/AddItem";
 
 export default function Home() {
-  usePageTitle("Home");
+  usePageTitle("Home")
+  const containerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+    color: "white",
+    textAlign: "center",
+    padding: "20px",
+    fontFamily: "Arial, sans-serif",
+  };
 
-  const { openModal } = useModal();
+  const headingStyle = {
+    fontSize: "2.5rem",
+    fontWeight: "bold",
+    marginBottom: "16px",
+  };
+
+  const paragraphStyle = {
+    fontSize: "1.2rem",
+    marginBottom: "24px",
+  };
+
+  const buttonStyle = {
+    backgroundColor: "white",
+    color: "#4f46e5",
+    padding: "12px 24px",
+    fontSize: "1rem",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: "600",
+    transition: "transform 0.2s, background 0.3s",
+  };
+
+  const buttonHover = {
+    transform: "scale(1.05)",
+    backgroundColor: "#f3f4f6",
+  };
+
+  const isLoggedIn = useAuthStore(selectIsLoggedIn);
+  const { showLoading, hideLoading } = useLoading();
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    showLoading();
+
+    setTimeout(() => {
+      hideLoading();
+      if (isLoggedIn) {
+        navigate("/dashboard"); // Redirect to dashboard if logged in
+      } else {
+        navigate("/login"); // Otherwise, go to login
+      }
+    }, 1000); // simulate loading for UX
+  };
 
   return (
-    <div className="home-container">
-      <div className="bg-gray-100 text-gray-800 p-6 shadow-sm flex justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Your Watchlist</h1>
-          <p className="text-gray-600">Track your shows, movies, and more.</p>
-        </div>
+    <div style={containerStyle}>
+      <div>
+        <h1 style={headingStyle}>Welcome to WatchTrack</h1>
+        <p style={paragraphStyle}>
+          Track your favorite movies, shows, and videos all in one place.
+        </p>
         <button
-          className="bg-gray-600 text-white p-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-          onClick={() => openModal(<AddItemForm />)}
+          onClick={handleGetStarted}
+          style={buttonStyle}
+          onMouseOver={(e) => Object.assign(e.target.style, buttonHover)}
+          onMouseOut={(e) => Object.assign(e.target.style, buttonStyle)}
         >
-          Add Item
+          Get Started
         </button>
-      </div>
-      <div className="items-grid">
-        {tempItems.map((item) => (
-          <ItemCard key={item.id} item={item} />
-        ))}
       </div>
     </div>
   );

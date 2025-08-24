@@ -1,17 +1,190 @@
 import React, { useState } from "react";
+import { addNewItem } from "../utils/itemHandlers";
+import { normalizeTime } from "../utils/timeFormatter";
+import { useLoading } from "../context/loadingContext";
 
-const AddItemForm = ({ onSubmit }) => {
-  const [itemName, setItemName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+const AddItemForm = ({ onItemAdded }) => {
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState("");
+  const [progress, setProgress] = useState({
+    time: "00:00:00",
+    season: "1",
+    episode: "1",
+    videoNumber: "",
+  });
+  const [errors, setErrors] = useState({});
+  const { showLoading, hideLoading } = useLoading();
 
-  const handleSubmit = (e) => {
+  const handleProgressChange = (field, value) => {
+    setProgress((prev) => {
+      if (field === "time") {
+        return {
+          ...prev,
+          [field]: normalizeTime(value),
+        };
+      }
+      return {
+        ...prev,
+        [field]: value,
+      };
+    });
+  };
+
+  // Validate fields based on type
+  const validateFields = () => {
+    const newErrors = {};
+    if (!title.trim()) newErrors.title = "Title is required";
+    if (!type.trim()) newErrors.type = "Type is required";
+
+    if (type === "Movie" && !progress.time.trim()) {
+      newErrors.progress = "Time progress is required";
+    }
+    if (type === "Series" && (!progress.season || !progress.episode)) {
+      newErrors.progress = "Season and Episode are required";
+    }
+    if (type === "Other" && (!progress.videoNumber || !progress.time.trim())) {
+      newErrors.progress = "Video number and time are required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!itemName.trim() || !price.trim()) return;
-    onSubmit({ name: itemName, description, price: parseFloat(price) });
-    setItemName("");
-    setDescription("");
-    setPrice("");
+    if (!validateFields()) return;
+
+    const now = new Date().toISOString();
+    const newItem = {
+      id: Date.now().toString(),
+      title,
+      type,
+      progress,
+      create_date: now,
+      update_date: now,
+    };
+
+    showLoading();
+    try {
+      const savedItem = await addNewItem(newItem);
+      if (onItemAdded) onItemAdded(savedItem);
+
+      // Reset form
+      setTitle("");
+      setType("");
+      setProgress({
+        time: "00:00:00",
+        season: "1",
+        episode: "1",
+        videoNumber: "1",
+      });
+      setErrors({});
+    } catch (error) {
+      console.error("Error adding item:", error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  // Render dynamic fields based on type
+  const renderDynamicFields = () => {
+    switch (type) {
+      case "Movie":
+        return (
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Time Progress (HH:MM:SS)
+            </label>
+            <input
+              type="text"
+              value={progress.time}
+              onChange={(e) => handleProgressChange("time", e.target.value)}
+              placeholder="e.g., 01:45:23"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        );
+
+      case "Series":
+        return (
+          <>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Season
+              </label>
+              <input
+                type="number"
+                value={progress.season}
+                onChange={(e) => handleProgressChange("season", e.target.value)}
+                placeholder="Enter season number"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Episode
+              </label>
+              <input
+                type="number"
+                value={progress.episode}
+                onChange={(e) =>
+                  handleProgressChange("episode", e.target.value)
+                }
+                placeholder="Enter episode number"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Time in Episode (optional)
+              </label>
+              <input
+                type="text"
+                value={progress.time}
+                onChange={(e) => handleProgressChange("time", e.target.value)}
+                placeholder="e.g., 00:23:15"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </>
+        );
+
+      case "Other":
+        return (
+          <>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Video Number
+              </label>
+              <input
+                type="number"
+                value={progress.videoNumber}
+                onChange={(e) =>
+                  handleProgressChange("videoNumber", e.target.value)
+                }
+                placeholder="Enter video number"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Time Progress
+              </label>
+              <input
+                type="text"
+                value={progress.time}
+                onChange={(e) => handleProgressChange("time", e.target.value)}
+                placeholder="e.g., 00:10:05"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </>
+        );
+
+      default:
+        return null;
+    }
   };
 
   return (
@@ -20,57 +193,56 @@ const AddItemForm = ({ onSubmit }) => {
       className="bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto space-y-5"
     >
       <h2 className="text-2xl font-semibold text-gray-800 text-center">
-        Add New Item
+        Add New Entry
       </h2>
 
-      {/* Item Name */}
+      {/* Title */}
       <div>
-        <label className="block text-gray-700 font-medium mb-1">
-          Item Name
-        </label>
+        <label className="block text-gray-700 font-medium mb-1">Title</label>
         <input
           type="text"
-          value={itemName}
-          onChange={(e) => setItemName(e.target.value)}
-          placeholder="Enter item name"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter show title"
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        {errors.title && (
+          <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+        )}
       </div>
 
-      {/* Description */}
+      {/* Type */}
       <div>
         <label className="block text-gray-700 font-medium mb-1">
-          Description
+          Type of Entry
         </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter description"
-          rows="3"
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
+        >
+          <option value="">Select type</option>
+          <option value="Movie">Movie</option>
+          <option value="Series">Series</option>
+          <option value="Other">Other</option>
+        </select>
+        {errors.type && (
+          <p className="text-red-500 text-sm mt-1">{errors.type}</p>
+        )}
       </div>
 
-      {/* Price */}
-      <div>
-        <label className="block text-gray-700 font-medium mb-1">
-          Price ($)
-        </label>
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Enter price"
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      {/* Dynamic Fields */}
+      {renderDynamicFields()}
+      {errors.progress && (
+        <p className="text-red-500 text-sm mt-1">{errors.progress}</p>
+      )}
 
       {/* Submit Button */}
       <button
         type="submit"
         className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
       >
-        Add Item
+        Submit
       </button>
     </form>
   );

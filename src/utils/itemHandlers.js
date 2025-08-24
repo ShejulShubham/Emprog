@@ -1,4 +1,6 @@
 import { createItem, getItems, updateItem, deleteItem } from "../firebase/item";
+import useAuthStore, { selectIsLoggedIn, selectUser } from "../store/useAuthStore";
+
 
 const LOCAL_STORAGE_KEY = "items";
 
@@ -13,43 +15,75 @@ export const getItemsFromLocal = () => {
   return data ? JSON.parse(data) : [];
 };
 
-// ✅ Add item (update local + Firestore)
+// ✅ Add new item (with Firestore + LocalStorage)
 export const addNewItem = async (item) => {
-  const newItem = await createItem(item);
+  const state = useAuthStore.getState();
+  const user = selectUser(state);
+  const isLoggedIn = selectIsLoggedIn(state);
+
+  if (!isLoggedIn) throw new Error("User not authenticated");
+
+  const newItem = await createItem(item, user.uid);
+
   const localItems = getItemsFromLocal();
   localItems.push(newItem);
   saveItemsToLocal(localItems);
+
   return newItem;
 };
 
-// ✅ Fetch items (check local first, fallback to Firestore)
+// ✅ Fetch items
 export const fetchItems = async () => {
-  let localItems = getItemsFromLocal();
+  const state = useAuthStore.getState();
+  const user = selectUser(state);
+  const isLoggedIn = selectIsLoggedIn(state);
+
+  if (!isLoggedIn) throw new Error("User not authenticated");
+
+  let localItems = getItemsFromLocal().filter(item => item.userId === user.uid);
   if (localItems.length > 0) {
     return localItems;
   }
-  const firestoreItems = await getItems();
+
+  const firestoreItems = await getItems(user.uid); // ✅ Firestore query
   saveItemsToLocal(firestoreItems);
+
   return firestoreItems;
 };
 
-// ✅ Update item (both local + Firestore)
+// ✅ Update item
 export const updateExistingItem = async (id, updatedData) => {
-  await updateItem(id, updatedData);
+  const state = useAuthStore.getState();
+  const user = selectUser(state);
+  const isLoggedIn = selectIsLoggedIn(state);
+
+  if (!isLoggedIn) throw new Error("User not authenticated");
+
+  await updateItem(id, updatedData, user.uid);
+
   let localItems = getItemsFromLocal();
-  localItems = localItems.map(item => item.id === id ? { ...item, ...updatedData } : item);
+  localItems = localItems.map(item =>
+    item.id === id ? { ...item, ...updatedData } : item
+  );
   saveItemsToLocal(localItems);
 };
 
-// ✅ Delete item (both local + Firestore)
+// ✅ Delete item
 export const deleteExistingItem = async (id) => {
-  await deleteItem(id);
+  const state = useAuthStore.getState();
+  const user = selectUser(state);
+  const isLoggedIn = selectIsLoggedIn(state);
+
+  if (!isLoggedIn) throw new Error("User not authenticated");
+
+  await deleteItem(id, user.uid);
+
   let localItems = getItemsFromLocal();
   localItems = localItems.filter(item => item.id !== id);
   saveItemsToLocal(localItems);
 };
 
-// ✅ Clear LocalStorage (optional utility)
+// ✅ Clear LocalStorage (optional)
 export const clearLocalItems = () => {
   localStorage.removeItem(LOCAL_STORAGE_KEY);
 };
