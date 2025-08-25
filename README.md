@@ -1,4 +1,3 @@
-```markdown
 # Emprog - 🎬 Show & Movie Tracker App
 
 A modern web application to **track your favorite shows, movies, and other videos** with ease.  
