@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { addNewItem } from "../utils/itemHandlers";
+import React, { useState, useEffect } from "react";
+import { addNewItem, updateExistingItem } from "../utils/itemHandlers";
 import { normalizeTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
 
-const AddItemForm = ({ onItemAdded }) => {
+const AddItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
+  const isEditMode = !!existingItem;
+
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [progress, setProgress] = useState({
@@ -15,22 +17,23 @@ const AddItemForm = ({ onItemAdded }) => {
   const [errors, setErrors] = useState({});
   const { showLoading, hideLoading } = useLoading();
 
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (isEditMode) {
+      setTitle(existingItem.title);
+      setType(existingItem.type);
+      setProgress(existingItem.progress);
+    }
+  }, [existingItem, isEditMode]);
+
   const handleProgressChange = (field, value) => {
-    setProgress((prev) => {
-      if (field === "time") {
-        return {
-          ...prev,
-          [field]: normalizeTime(value),
-        };
-      }
-      return {
-        ...prev,
-        [field]: value,
-      };
-    });
+    setProgress((prev) => ({
+      ...prev,
+      [field]: field === "time" ? normalizeTime(value) : value,
+    }));
   };
 
-  // Validate fields based on type
+  // Validate fields
   const validateFields = () => {
     const newErrors = {};
     if (!title.trim()) newErrors.title = "Title is required";
@@ -50,44 +53,59 @@ const AddItemForm = ({ onItemAdded }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateFields()) return;
+  // Handle submit for Add or Update
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validateFields()) return;
 
-    const now = new Date().toISOString();
-    const newItem = {
-      id: Date.now().toString(),
-      title,
-      type,
-      progress,
-      create_date: now,
-      update_date: now,
-    };
+  const now = new Date().toISOString();
 
-    showLoading();
-    try {
-      const savedItem = await addNewItem(newItem);
+  showLoading();
+  try {
+    if (isEditMode) {
+      const updatedData = {
+        title,
+        type,
+        progress,
+        update_date: now,
+      };
+
+      await updateExistingItem(existingItem.id, updatedData);
+      if (onItemUpdated) onItemUpdated({...updatedData, id: existingItem.id});
+    } else {
+      const newItem = {
+        title,
+        type,
+        progress,
+        create_date: now,
+        update_date: now,
+      };
+
+      const savedItem = await addNewItem(newItem); // savedItem includes Firestore `id`
       if (onItemAdded) onItemAdded(savedItem);
+    }
 
-      // Reset form
+    // Reset form if adding
+    if (!isEditMode) {
       setTitle("");
       setType("");
       setProgress({
         time: "00:00:00",
         season: "1",
         episode: "1",
-        videoNumber: "1",
+        videoNumber: "",
       });
       setErrors({});
-    } catch (error) {
-      console.error("Error adding item:", error);
-    } finally {
-      hideLoading();
     }
-  };
+  } catch (error) {
+    console.error("Error saving item:", error);
+  } finally {
+    hideLoading();
+  }
+};
 
-  // Render dynamic fields based on type
+
+  // Dynamic fields
   const renderDynamicFields = () => {
     switch (type) {
       case "Movie":
@@ -105,7 +123,6 @@ const AddItemForm = ({ onItemAdded }) => {
             />
           </div>
         );
-
       case "Series":
         return (
           <>
@@ -149,7 +166,6 @@ const AddItemForm = ({ onItemAdded }) => {
             </div>
           </>
         );
-
       case "Other":
         return (
           <>
@@ -181,7 +197,6 @@ const AddItemForm = ({ onItemAdded }) => {
             </div>
           </>
         );
-
       default:
         return null;
     }
@@ -193,7 +208,7 @@ const AddItemForm = ({ onItemAdded }) => {
       className="bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto space-y-5"
     >
       <h2 className="text-2xl font-semibold text-gray-800 text-center">
-        Add New Entry
+        {isEditMode ? "Update Entry" : "Add New Entry"}
       </h2>
 
       {/* Title */}
@@ -220,6 +235,7 @@ const AddItemForm = ({ onItemAdded }) => {
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isEditMode} // prevent changing type during update
         >
           <option value="">Select type</option>
           <option value="Movie">Movie</option>
@@ -242,7 +258,7 @@ const AddItemForm = ({ onItemAdded }) => {
         type="submit"
         className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
       >
-        Submit
+        {isEditMode ? "Update" : "Submit"}
       </button>
     </form>
   );

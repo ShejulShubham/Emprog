@@ -12,7 +12,7 @@ export default function Auth({ isRegistration }) {
   const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
 
-  usePageTitle(isSignUp ? "Registration" : "Log-In");
+  usePageTitle("Auth");
 
   const validateForm = () => {
     if (!email || !password) {
@@ -24,8 +24,8 @@ export default function Auth({ isRegistration }) {
       setError("Invalid email format.");
       return false;
     }
-    if (password.length < 4) {
-      setError("Password must be at least 4 characters.");
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
       return false;
     }
     setError("");
@@ -43,23 +43,27 @@ export default function Auth({ isRegistration }) {
       } else {
         await handleSignIn(email, password);
       }
-      navigate("/dashboard"); // ✅ Redirect on success
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      if (err.message === "Firebase: Error (auth/invalid-credential).") {
+        setError("Email or Password is wrong");
+      } else {
+        setError(err.message || "Something went wrong.");
+      }
     } finally {
       hideLoading();
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 pb-20">
       <div className="bg-white shadow-lg rounded-xl w-full max-w-md p-8">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
           {isSignUp ? "Create Account" : "Sign In"}
         </h2>
 
         {error && (
-          <div className="mb-4 text-red-600 text-sm bg-red-100 p-2 rounded">
+          <div className="text-center mb-4 text-red-600 text-sm bg-red-100 p-2 rounded">
             {error}
           </div>
         )}

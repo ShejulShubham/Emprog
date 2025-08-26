@@ -29,8 +29,7 @@ export const getItems = async (userId) => {
 };
 
 // ✅ Update Item (verify userId before update)
-export const updateItem = async (id, updatedData, userId) => {
-  if (!userId) throw new Error("User ID is required to update item.");
+export const updateItem = async (id, updatedData) => {
   
   const docRef = doc(db, "items", id);
   await updateDoc(docRef, {
@@ -39,8 +38,7 @@ export const updateItem = async (id, updatedData, userId) => {
 };
 
 // ✅ Delete Item (verify userId before delete)
-export const deleteItem = async (id, userId) => {
-  if (!userId) throw new Error("User ID is required to delete item.");
+export const deleteItem = async (id) => {
   
   const docRef = doc(db, "items", id);
   await deleteDoc(docRef);

@@ -1,4 +1,3 @@
-import "../styles/Home.css";
 import ItemCard from "../components/ItemCard";
 import { useEffect, useState } from "react";
 import { usePageTitle } from "../hooks/usePageTitle";
@@ -20,7 +19,6 @@ export default function Dashboard() {
 
   const handleGetStarted = () => {
     showLoading();
-
     setTimeout(() => {
       hideLoading();
       if (!isLoggedIn) navigate("/login");
@@ -43,8 +41,27 @@ export default function Dashboard() {
     closeModal(); // Close modal after adding
   };
 
+  // ✅ Handle updating an existing item
+  const handleItemUpdated = (updatedItem) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+    closeModal();
+  };
+
+  // ✅ Open AddItemForm in update mode
+  const handleUpdateItem = (item) => {
+    openModal(
+      <AddItemForm
+        existingItem={item}
+        onItemAdded={handleItemAdded}
+        onItemUpdated={handleItemUpdated}
+      />
+    );
+  };
+
   return (
-    <div className="home-container">
+    <div className="min-h-screen px-4 bg-gray-50">
       <div className="bg-gray-100 text-gray-800 p-6 shadow-sm flex justify-between">
         <div>
           <h1 className="text-2xl font-bold">Your Watchlist</h1>
@@ -60,9 +77,11 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <div className="items-grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
         {items.length > 0 ? (
-          items.map((item) => <ItemCard key={item.id} item={item} />)
+          items.map((item) => (
+            <ItemCard key={item.id} item={item} onUpdateItem={handleUpdateItem} />
+          ))
         ) : (
           <p className="text-gray-500 text-center mt-10">
             No items yet. Add your first entry!

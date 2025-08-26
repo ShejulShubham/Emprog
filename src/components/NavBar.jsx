@@ -17,8 +17,9 @@ const NavBar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
+    { name: "Dashboard", path: "/dashboard" },
     { name: "Contact", path: "/contact" },
+    { name: "About", path: "/about" },
   ];
 
   return (
@@ -29,6 +30,15 @@ const NavBar = () => {
           <NavLink to="/" onClick={() => setIsOpen(false)}>
             Emprog
           </NavLink>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-6">
+          {navItems.map((item) => (
+            <NavLink key={item.path} to={item.path} className={linkClasses}>
+              {item.name}
+            </NavLink>
+          ))}
         </div>
 
         {/* Login menu */}
@@ -50,15 +60,6 @@ const NavBar = () => {
               </NavLink>
             </>
           )}
-        </div>
-
-        {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6">
-          {navItems.map((item) => (
-            <NavLink key={item.path} to={item.path} className={linkClasses}>
-              {item.name}
-            </NavLink>
-          ))}
         </div>
 
         {/* Mobile Menu Button */}

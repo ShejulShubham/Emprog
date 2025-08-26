@@ -13,7 +13,7 @@ function App() {
       <Modal />
       <Router>
         <Header />
-        <main className="pt-20">
+        <main>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />

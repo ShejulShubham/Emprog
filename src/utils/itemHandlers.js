@@ -54,12 +54,11 @@ export const fetchItems = async () => {
 // ✅ Update item
 export const updateExistingItem = async (id, updatedData) => {
   const state = useAuthStore.getState();
-  const user = selectUser(state);
   const isLoggedIn = selectIsLoggedIn(state);
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  await updateItem(id, updatedData, user.uid);
+  await updateItem(id, updatedData);
 
   let localItems = getItemsFromLocal();
   localItems = localItems.map(item =>
@@ -71,12 +70,11 @@ export const updateExistingItem = async (id, updatedData) => {
 // ✅ Delete item
 export const deleteExistingItem = async (id) => {
   const state = useAuthStore.getState();
-  const user = selectUser(state);
   const isLoggedIn = selectIsLoggedIn(state);
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  await deleteItem(id, user.uid);
+  await deleteItem(id);
 
   let localItems = getItemsFromLocal();
   localItems = localItems.filter(item => item.id !== id);
