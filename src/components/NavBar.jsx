@@ -19,22 +19,13 @@ const NavBar = ({ handleLogout }) => {
 
         {/* Login menu */}
         <div>
-          {user ? (
+          {user && (
             <button
               onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded"
             >
               Logout
             </button>
-          ) : (
-            <div className="m-2">
-              <NavLink to="/login" className="px-4 py-2">
-                Sign In
-              </NavLink>
-              <NavLink to="/auth" className="bg-blue-500 px-4 py-2 rounded">
-                Sign Up
-              </NavLink>
-            </div>
           )}
         </div>
       </nav>

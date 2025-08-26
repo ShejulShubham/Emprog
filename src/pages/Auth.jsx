@@ -39,6 +39,11 @@ export default function Auth({ isRegistration }) {
     showLoading();
     try {
       if (isSignUp) {
+        if (email === "test@gmail.com" && password === "password") {
+          setError("You have entered the test credentials");
+          return;
+        }
+
         await handleSignUp(email, password);
       } else {
         await handleSignIn(email, password);
@@ -109,16 +114,18 @@ export default function Auth({ isRegistration }) {
             {isSignUp ? "Sign In" : "Sign Up"}
           </button>
         </p>
-        <p className="mt-6 text-center text-gray-600">
-          Login with test account{" "}
-          <button
-            type="button"
-            onClick={handleTestSignIn}
-            className="text-blue-600 hover:underline"
-          >
-            Click here
-          </button>
-        </p>
+        {!isSignUp && (
+          <p className="mt-6 text-center text-gray-600">
+            Login with test account{" "}
+            <button
+              type="button"
+              onClick={handleTestSignIn}
+              className="text-blue-600 hover:underline"
+            >
+              Click here
+            </button>
+          </p>
+        )}
       </div>
     </div>
   );
