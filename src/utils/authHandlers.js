@@ -37,6 +37,7 @@ export const handleSignIn = async (email, password) => {
 export const handleSignOut = async () => {
   try {
     await logOut();
+    return true;
   } finally {
     const { logout } = useAuthStore.getState();
     logout();

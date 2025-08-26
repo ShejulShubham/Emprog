@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-import { handleSignOut } from "../utils/authHandlers";
 
-const NavBar = () => {
+const NavBar = ({ handleLogout }) => {
   const user = useAuthStore((state) => state.user);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -45,83 +44,23 @@ const NavBar = () => {
         <div>
           {user ? (
             <button
-              onClick={handleSignOut}
+              onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded"
             >
               Logout
             </button>
           ) : (
-            <>
-              <NavLink to="/login" className="mr-4">
+            <div className="m-2">
+              <NavLink to="/login" className="px-4 py-2">
                 Sign In
               </NavLink>
               <NavLink to="/auth" className="bg-blue-500 px-4 py-2 rounded">
                 Sign Up
               </NavLink>
-            </>
+            </div>
           )}
         </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden focus:outline-none"
-        >
-          {isOpen ? (
-            // Close Icon (X)
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            // Menu Icon (Hamburger)
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          )}
-        </button>
       </nav>
-
-      {/* Mobile Dropdown Menu */}
-      {isOpen && (
-        <div className="absolute top-16 left-0 w-full bg-gray-900 flex flex-col items-center md:hidden shadow-lg">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `w-full text-center py-3 hover:bg-gray-800 ${
-                  isActive ? "text-blue-500 font-semibold bg-gray-800" : ""
-                }`
-              }
-              onClick={() => setIsOpen(false)}
-            >
-              {item.name}
-            </NavLink>
-          ))}
-        </div>
-      )}
     </header>
   );
 };
