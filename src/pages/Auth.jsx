@@ -55,6 +55,11 @@ export default function Auth({ isRegistration }) {
     }
   };
 
+  function handleTestSignIn() {
+    setEmail("test@gmail.com");
+    setPassword("password");
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 pb-20">
       <div className="bg-white shadow-lg rounded-xl w-full max-w-md p-8">
@@ -97,11 +102,21 @@ export default function Auth({ isRegistration }) {
             type="button"
             onClick={() => {
               setIsSignUp(!isSignUp);
-              setError(""); // clear error on toggle
+              setError("");
             }}
             className="text-blue-600 hover:underline"
           >
             {isSignUp ? "Sign In" : "Sign Up"}
+          </button>
+        </p>
+        <p className="mt-6 text-center text-gray-600">
+          Login with test account{" "}
+          <button
+            type="button"
+            onClick={handleTestSignIn}
+            className="text-blue-600 hover:underline"
+          >
+            Click here
           </button>
         </p>
       </div>
