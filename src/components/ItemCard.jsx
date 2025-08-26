@@ -1,6 +1,6 @@
 import { formatTime } from "../utils/timeFormatter";
 
-export default function ItemCard({ item, onUpdateItem }) {
+export default function ItemCard({ item, onUpdateItem, onDeleteItem }) {
   const { title, type, progress } = item;
 
   const showInfoByType = () => {
@@ -38,12 +38,20 @@ export default function ItemCard({ item, onUpdateItem }) {
       <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
       <p className="text-gray-600 text-sm">Type: {type}</p>
       <div>{showInfoByType()}</div>
-      <button
-        className="mt-3 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-        onClick={() => onUpdateItem(item)}
-      >
-        Update Progress
-      </button>
+      <div className="flex justify-between">
+        <button
+          className="mt-3 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+          onClick={() => onUpdateItem(item)}
+        >
+          Update
+        </button>
+        <button
+          onClick={() => onDeleteItem(item.id)}
+          className="mt-3 px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-7  00"
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 }

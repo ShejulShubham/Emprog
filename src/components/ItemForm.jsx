@@ -3,7 +3,7 @@ import { addNewItem, updateExistingItem } from "../utils/itemHandlers";
 import { normalizeTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
 
-const AddItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
+const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   const isEditMode = !!existingItem;
 
   const [title, setTitle] = useState("");
@@ -54,56 +54,56 @@ const AddItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   };
 
   // Handle submit for Add or Update
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validateFields()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateFields()) return;
 
-  const now = new Date().toISOString();
+    const now = new Date().toISOString();
 
-  showLoading();
-  try {
-    if (isEditMode) {
-      const updatedData = {
-        title,
-        type,
-        progress,
-        update_date: now,
-      };
+    showLoading();
+    try {
+      if (isEditMode) {
+        const updatedData = {
+          title,
+          type,
+          progress,
+          update_date: now,
+        };
 
-      await updateExistingItem(existingItem.id, updatedData);
-      if (onItemUpdated) onItemUpdated({...updatedData, id: existingItem.id});
-    } else {
-      const newItem = {
-        title,
-        type,
-        progress,
-        create_date: now,
-        update_date: now,
-      };
+        await updateExistingItem(existingItem.id, updatedData);
+        if (onItemUpdated)
+          onItemUpdated({ ...updatedData, id: existingItem.id });
+      } else {
+        const newItem = {
+          title,
+          type,
+          progress,
+          create_date: now,
+          update_date: now,
+        };
 
-      const savedItem = await addNewItem(newItem); // savedItem includes Firestore `id`
-      if (onItemAdded) onItemAdded(savedItem);
+        const savedItem = await addNewItem(newItem); // savedItem includes Firestore `id`
+        if (onItemAdded) onItemAdded(savedItem);
+      }
+
+      // Reset form if adding
+      if (!isEditMode) {
+        setTitle("");
+        setType("");
+        setProgress({
+          time: "00:00:00",
+          season: "1",
+          episode: "1",
+          videoNumber: "",
+        });
+        setErrors({});
+      }
+    } catch (error) {
+      console.error("Error saving item:", error);
+    } finally {
+      hideLoading();
     }
-
-    // Reset form if adding
-    if (!isEditMode) {
-      setTitle("");
-      setType("");
-      setProgress({
-        time: "00:00:00",
-        season: "1",
-        episode: "1",
-        videoNumber: "",
-      });
-      setErrors({});
-    }
-  } catch (error) {
-    console.error("Error saving item:", error);
-  } finally {
-    hideLoading();
-  }
-};
-
+  };
 
   // Dynamic fields
   const renderDynamicFields = () => {
@@ -205,7 +205,7 @@ const handleSubmit = async (e) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto space-y-5"
+      className="bg-white p-3 rounded-xl shadow-lg max-w-md mx-auto space-y-5"
     >
       <h2 className="text-2xl font-semibold text-gray-800 text-center">
         {isEditMode ? "Update Entry" : "Add New Entry"}
@@ -264,4 +264,4 @@ const handleSubmit = async (e) => {
   );
 };
 
-export default AddItemForm;
+export default ItemForm;
