@@ -4,12 +4,10 @@ import { persist } from "zustand/middleware";
 const useAuthStore = create(
   persist(
     (set) => ({
-      user: null, // { uid, email, displayName, photoURL }
-      error: null,
+      user: null,
 
       setUser: (user) => set({ user }),
-      setError: (error) => set({ error }),
-      logout: () => set({ user: null, error: null }),
+      logout: () => set({ user: null}),
     }),
     {
       name: "auth-storage", // Key in localStorage

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "../context/loadingContext";
-import { handleSignIn, handleSignUp } from "../utils/authHandlers";
+import {
+  handleGoogleSignIn,
+  handleSignIn,
+  handleSignUp,
+} from "../utils/authHandlers";
 import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Auth({ isRegistration }) {
@@ -13,6 +17,17 @@ export default function Auth({ isRegistration }) {
   const { showLoading, hideLoading } = useLoading();
 
   usePageTitle("Auth");
+
+  const handleGoogleLogin = async () => {
+    try {
+      await handleGoogleSignIn();
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      setError(err.message || "Something went wrong.");
+    }
+  };
 
   const validateForm = () => {
     if (!email || !password) {
@@ -115,7 +130,7 @@ export default function Auth({ isRegistration }) {
           </button>
         </p>
         {!isSignUp && (
-          <p className="mt-6 text-center text-gray-600">
+          <p className="mt-2 text-center text-gray-600">
             Login with test account{" "}
             <button
               type="button"
@@ -126,6 +141,32 @@ export default function Auth({ isRegistration }) {
             </button>
           </p>
         )}
+
+        {/* Sign in with Google  */}
+
+        <div className="flex items-center gap-2 my-6">
+          <div className="flex-grow h-px bg-gray-300"></div>
+          <span className="text-gray-500 text-sm">or</span>
+          <div className="flex-grow h-px bg-gray-300"></div>
+        </div>
+
+        <div className="mt-6">
+          <button
+            onClick={handleGoogleLogin}
+            type="button"
+            className="flex items-center justify-center w-full gap-3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition"
+          >
+            {/* Google Icon */}
+            <img
+              src="https://www.svgrepo.com/show/355037/google.svg"
+              alt="Google logo"
+              className="w-5 h-5"
+            />
+            <span className="text-gray-700 font-medium">
+              Continue with Google
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
