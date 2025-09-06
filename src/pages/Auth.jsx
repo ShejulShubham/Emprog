@@ -25,7 +25,7 @@ export default function Auth({ isRegistration }) {
       navigate("/dashboard");
     } catch (error) {
       console.error("Google sign-in failed:", error);
-      setError(err.message || "Something went wrong.");
+      setError(error.message || "Something went wrong.");
     }
   };
 
