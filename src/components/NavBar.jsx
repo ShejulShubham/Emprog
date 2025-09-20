@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { selectIsLoggedIn } from "../store/useAuthStore";
+import { useUserSettings } from "../store/useSettingStore";
 import useAuthStore from "../store/useAuthStore";
 
 const NavBar = ({ handleLogout }) => {
-  const user = useAuthStore((state) => state.user);
+  const isLoggedIn = useAuthStore(selectIsLoggedIn);
+  const { settings, updateSetting } = useUserSettings();
+  const isDirectToDashboard = settings.directToDashboard;
+
+  function toggleDirectToDashboard() {
+    updateSetting("directToDashboard", !settings.directToDashboard);
+  }
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,9 +25,30 @@ const NavBar = ({ handleLogout }) => {
           </NavLink>
         </div>
 
+        <div>
+          {isLoggedIn &&
+            (isDirectToDashboard ? (
+              <button
+                title="Disable Direct to Dashboard"
+                onClick={toggleDirectToDashboard}
+                className="bg-green-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105"
+              >
+                On
+              </button>
+            ) : (
+              <button
+                title="Enable Direct to Dashboard"
+                onClick={toggleDirectToDashboard}
+                className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105"
+              >
+                Off
+              </button>
+            ))}
+        </div>
+
         {/* Login menu */}
         <div>
-          {user && (
+          {isLoggedIn && (
             <button
               onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded"
