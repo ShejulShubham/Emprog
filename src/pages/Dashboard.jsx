@@ -46,14 +46,13 @@ export default function Dashboard() {
 
   const handleGetStarted = () => {
     showLoading();
-    setTimeout(() => {
-      hideLoading();
-      if (!isLoggedIn) navigate("/login");
-    }, 1000);
+    if (!isLoggedIn) navigate("/login");
+    hideLoading();
   };
 
   // ✅ Fetch items on mount
   useEffect(() => {
+    // debugger;
     const loadItems = async () => {
       const allItems = await fetchItems();
       setItems(allItems);
