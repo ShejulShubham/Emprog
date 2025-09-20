@@ -6,6 +6,7 @@ import Modal from "./components/Modal";
 import { AppProvider } from "./AppContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import RedirectIfNeeded from "./components/RouteGuard";
 
 function App() {
   return (
@@ -15,7 +16,14 @@ function App() {
         <Header />
         <main className="pt-20">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <RedirectIfNeeded>
+                  <Home />
+                </RedirectIfNeeded>
+              }
+            />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/auth" element={<Auth isRegistration={true} />} />
             <Route path="/login" element={<Auth />} />

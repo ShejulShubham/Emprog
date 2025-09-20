@@ -1,12 +1,10 @@
 import NavBar from "./NavBar";
 import { handleSignOut } from "../utils/authHandlers";
 import { useNavigate, useLocation } from "react-router-dom";
-import useAuthStore from "../store/useAuthStore";
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useAuthStore((state) => state.user);
   
   // Render minimal home header on home page
   if (location.pathname === '/') {
