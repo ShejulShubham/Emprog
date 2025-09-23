@@ -148,7 +148,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <div className="m-3">
+<div className="m-3">
         {Object.keys(groupedItems).length > 0 ? (
           Object.keys(groupedItems).map((type) => (
             <div key={type} className="mb-8">
@@ -156,27 +156,26 @@ export default function Dashboard() {
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 {typeIcons[type] || (
                   <PlayCircle className="w-4 h-4 inline mr-1 text-gray-500" />
-                )}{" "}
+                )}
                 {type}
               </h2>
 
-              {/* Items Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Items Row (always horizontal scroll) */}
+              <div className="flex gap-6 overflow-x-auto">
                 {groupedItems[type].map((item) => (
-                  <ItemCard
-                    key={item.id}
-                    item={item}
-                    onUpdateItem={handleUpdateItem}
-                    onDeleteItem={handleDeleteItem}
-                  />
+                  <div key={item.id} className="flex-shrink-0 w-96 sm:w-80 overflow-hidden">
+                    <ItemCard
+                      item={item}
+                      onUpdateItem={handleUpdateItem}
+                      onDeleteItem={handleDeleteItem}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center mt-10">
-            No items yet. Add your first entry!
-          </p>
+          <p>No items found</p>
         )}
       </div>
     </div>

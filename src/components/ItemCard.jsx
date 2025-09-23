@@ -119,7 +119,7 @@ export default function ItemCard({ item, onUpdateItem, onDeleteItem }) {
       </h2>
       <p className="text-gray-600 text-sm">Type: {type}</p>
       <div>{showInfoByType()}</div>
-      <div className="flex justify-between mt-3 gap-2">
+      <div className="flex justify-between mt-9 gap-2">
         <button
           onClick={() => onUpdateItem(item)}
           className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transform transition-all duration-200 hover:scale-105"
