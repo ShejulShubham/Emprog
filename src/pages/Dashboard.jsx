@@ -163,7 +163,7 @@ export default function Dashboard() {
               {/* Items Row (always horizontal scroll) */}
               <div className="flex gap-6 overflow-x-auto">
                 {groupedItems[type].map((item) => (
-                  <div key={item.id} className="flex-shrink-0 w-96 sm:w-80 overflow-hidden">
+                  <div key={item.id} className="flex-shrink-0 w-96 sm:w-80 m-2">
                     <ItemCard
                       item={item}
                       onUpdateItem={handleUpdateItem}
