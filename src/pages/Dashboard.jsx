@@ -141,7 +141,7 @@ export default function Dashboard() {
           <p className="text-gray-600">Track your shows, movies, and more.</p>
         </div>
         <button
-          className="bg-gray-600 text-white p-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+          className="bg-gray-600 text-white p-2 rounded-lg font-medium shadow-md hover:bg-gray-800 hover:shadow-lg transform transition-all duration-200 ease-in hover:scale-110"
           onClick={() => openModal(<ItemForm onItemAdded={handleItemAdded} />)}
         >
           Add New Entry
