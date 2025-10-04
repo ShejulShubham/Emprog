@@ -19,10 +19,14 @@ const NavBar = ({ handleLogout }) => {
     <header className="fixed top-0 left-0 w-full bg-gray-900 text-white shadow-lg z-50">
       <nav className="px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-xl font-bold">
-          <NavLink to="/" onClick={() => setIsOpen(false)}>
-            Emprog
-          </NavLink>
+        <div className="text-xl font-bold cursor-default">
+          {isDirectToDashboard ? (
+            <>Emprog</>
+          ) : (
+            <NavLink to="/" onClick={() => setIsOpen(false)}>
+              Emprog
+            </NavLink>
+          )}
         </div>
 
         <div>
