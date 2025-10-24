@@ -148,7 +148,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-<div className="m-3">
+      <div className="m-3">
         {Object.keys(groupedItems).length > 0 ? (
           Object.keys(groupedItems).map((type) => (
             <div key={type} className="mb-8">
@@ -161,15 +161,13 @@ export default function Dashboard() {
               </h2>
 
               {/* Items Row (always horizontal scroll) */}
-              <div className="flex gap-6 overflow-x-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {groupedItems[type].map((item) => (
-                  <div key={item.id} className="flex-shrink-0 w-96 sm:w-80 m-2">
-                    <ItemCard
-                      item={item}
-                      onUpdateItem={handleUpdateItem}
-                      onDeleteItem={handleDeleteItem}
-                    />
-                  </div>
+                  <ItemCard
+                    item={item}
+                    onUpdateItem={handleUpdateItem}
+                    onDeleteItem={handleDeleteItem}
+                  />
                 ))}
               </div>
             </div>
