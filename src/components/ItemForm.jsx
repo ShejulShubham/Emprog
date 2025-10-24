@@ -20,7 +20,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
     page: "",
   });
   const [errors, setErrors] = useState({});
-  const { showLoading, hideLoading } = useLoading();
+  const { showLoading, hideLoading, isLoading } = useLoading();
 
   useEffect(() => {
     if (isEditMode) {
@@ -426,12 +426,21 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         <p className="text-red-500 text-sm mt-1">{errors.progress}</p>
       )}
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-      >
-        {isEditMode ? "Update" : "Submit"}
-      </button>
+      {isLoading ? (
+        <button
+          className="w-full bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-not-allowed"
+          disabled="true"
+        >
+          {isEditMode ? "Updating..." : "Submitting..."}
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+        >
+          {isEditMode ? "Update" : "Submit"}
+        </button>
+      )}
     </form>
   );
 };
