@@ -20,7 +20,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
     page: "",
   });
   const [errors, setErrors] = useState({});
-  const { showLoading, hideLoading } = useLoading();
+  const { showLoading, hideLoading, isLoading } = useLoading();
 
   useEffect(() => {
     if (isEditMode) {
@@ -44,7 +44,8 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
 
     switch (type) {
       case "Movie":
-        if (!progress.time.trim()) newErrors.progress = "Time progress is required";
+        if (!progress.time.trim())
+          newErrors.progress = "Time progress is required";
         break;
       case "Series":
       case "Anime":
@@ -154,7 +155,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
       case "Documentary":
         return (
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Time Progress</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Time Progress
+            </label>
             <input
               type="text"
               value={progress.time}
@@ -169,7 +172,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Season</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Season
+              </label>
               <input
                 type="number"
                 value={progress.season}
@@ -179,17 +184,23 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Episode</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Episode
+              </label>
               <input
                 type="number"
                 value={progress.episode}
-                onChange={(e) => handleProgressChange("episode", e.target.value)}
+                onChange={(e) =>
+                  handleProgressChange("episode", e.target.value)
+                }
                 placeholder="Enter episode number"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Time in Episode</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Time in Episode
+              </label>
               <input
                 type="text"
                 value={progress.time}
@@ -204,17 +215,23 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Episode Number</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Episode Number
+              </label>
               <input
                 type="number"
                 value={progress.episode}
-                onChange={(e) => handleProgressChange("episode", e.target.value)}
+                onChange={(e) =>
+                  handleProgressChange("episode", e.target.value)
+                }
                 placeholder="Enter episode number"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Time Progress</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Time Progress
+              </label>
               <input
                 type="text"
                 value={progress.time}
@@ -229,7 +246,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Track Number</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Track Number
+              </label>
               <input
                 type="number"
                 value={progress.track}
@@ -239,7 +258,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Time Progress</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Time Progress
+              </label>
               <input
                 type="text"
                 value={progress.time}
@@ -255,17 +276,23 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Video Number</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Video Number
+              </label>
               <input
                 type="number"
                 value={progress.videoNumber}
-                onChange={(e) => handleProgressChange("videoNumber", e.target.value)}
+                onChange={(e) =>
+                  handleProgressChange("videoNumber", e.target.value)
+                }
                 placeholder="Enter video number"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Time Progress</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Time Progress
+              </label>
               <input
                 type="text"
                 value={progress.time}
@@ -280,7 +307,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Module</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Module
+              </label>
               <input
                 type="number"
                 value={progress.module}
@@ -290,7 +319,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Lesson</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Lesson
+              </label>
               <input
                 type="number"
                 value={progress.lesson}
@@ -306,17 +337,23 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Chapter</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Chapter
+              </label>
               <input
                 type="number"
                 value={progress.chapter}
-                onChange={(e) => handleProgressChange("chapter", e.target.value)}
+                onChange={(e) =>
+                  handleProgressChange("chapter", e.target.value)
+                }
                 placeholder="Enter chapter number"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Page</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Page
+              </label>
               <input
                 type="number"
                 value={progress.page}
@@ -333,7 +370,10 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-3 rounded-xl shadow-lg max-w-md mx-auto space-y-5">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-3 rounded-xl shadow-lg max-w-md mx-auto space-y-5"
+    >
       <h2 className="text-2xl font-semibold text-gray-800 text-center">
         {isEditMode ? "Update Entry" : "Add New Entry"}
       </h2>
@@ -347,42 +387,60 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
           placeholder="Enter title"
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+        {errors.title && (
+          <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+        )}
       </div>
 
-      <div>
-        <label className="block text-gray-700 font-medium mb-1">Type of Entry</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={isEditMode}
-        >
-          <option value="">Select type</option>
-          <option value="Movie">Movie</option>
-          <option value="Series">Series</option>
-          <option value="Anime">Anime</option>
-          <option value="Podcast">Podcast</option>
-          <option value="Audiobook">Audiobook</option>
-          <option value="Documentary">Documentary</option>
-          <option value="Lecture">Lecture</option>
-          <option value="Course">Course</option>
-          <option value="Manga">Manga</option>
-          <option value="Webtoon">Webtoon</option>
-          <option value="Other">Other</option>
-        </select>
-        {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type}</p>}
-      </div>
+      {!isEditMode && (
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">
+            Type of Entry
+          </label>
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select type</option>
+            <option value="Movie">Movie</option>
+            <option value="Series">Series</option>
+            <option value="Anime">Anime</option>
+            <option value="Podcast">Podcast</option>
+            <option value="Audiobook">Audiobook</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Lecture">Lecture</option>
+            <option value="Course">Course</option>
+            <option value="Manga">Manga</option>
+            <option value="Webtoon">Webtoon</option>
+            <option value="Other">Other</option>
+          </select>
+          {errors.type && (
+            <p className="text-red-500 text-sm mt-1">{errors.type}</p>
+          )}
+        </div>
+      )}
 
       {renderDynamicFields()}
-      {errors.progress && <p className="text-red-500 text-sm mt-1">{errors.progress}</p>}
+      {errors.progress && (
+        <p className="text-red-500 text-sm mt-1">{errors.progress}</p>
+      )}
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-      >
-        {isEditMode ? "Update" : "Submit"}
-      </button>
+      {isLoading ? (
+        <button
+          className="w-full bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-not-allowed"
+          disabled="true"
+        >
+          {isEditMode ? "Updating..." : "Submitting..."}
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+        >
+          {isEditMode ? "Update" : "Submit"}
+        </button>
+      )}
     </form>
   );
 };
