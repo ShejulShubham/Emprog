@@ -1,9 +1,51 @@
+import React from "react";
+import { updateExistingItem } from "../utils/itemHandlers";
 import { formatTime } from "../utils/timeFormatter";
+import { useLoading } from "../context/loadingContext";
 
-export default function ItemCard({ item, onUpdateItem, onDeleteItem }) {
+export default function ItemCard({ item, onItemUpdated, onUpdateItem, onDeleteItem }) {
   const { title, type, progress } = item;
 
+  const {showLoading, hideLoading} = useLoading();
+
   const hasValidTime = progress.time && progress.time !== "00:00:00";
+
+  async function updateOnDoubleClick() {
+
+    //TODO: Make this function work for other categories too
+    
+    const now = new Date().toISOString();
+    showLoading();
+    try {
+
+      const updatedEpisode = String(Number(progress.episode) + 1);
+
+        const updatedData = {
+          title,
+          type,
+          progress: {
+            season: progress.season,
+            time: progress.time,
+            episode: updatedEpisode,
+            videoNumber: progress.videoNumber
+          },
+          update_date: now,
+        };
+
+        // console.log("existing item: ", item);
+        // console.log("updated item ", updatedData);
+
+        await updateExistingItem(item.id, updatedData);
+        
+        if (onItemUpdated){
+          onItemUpdated({ ...updatedData, id: item.id });
+        }
+      } catch (error) {
+      console.error("Error saving item:", error);
+    } finally {
+      hideLoading();
+    }
+  }
 
   const showInfoByType = () => {
     switch (type) {
@@ -25,7 +67,11 @@ export default function ItemCard({ item, onUpdateItem, onDeleteItem }) {
             <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
               Season {progress.season}
             </span>
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
+            <span
+              className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold cursor-pointer select-none"
+              onDoubleClick={updateOnDoubleClick}
+              title="Double-click to increase episode"
+            >
               Episode {progress.episode}
             </span>
             {hasValidTime && (
@@ -39,7 +85,11 @@ export default function ItemCard({ item, onUpdateItem, onDeleteItem }) {
       case "Podcast":
         return (
           <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
+            <span
+              className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold cursor-pointer select-none"
+              onDoubleClick={updateOnDoubleClick}
+              title="Double-click to increase episode"
+            >
               Episode {progress.episode}
             </span>
             {hasValidTime && (
