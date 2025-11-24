@@ -39,7 +39,7 @@ export default function Home() {
             onClick={handleGetStarted}
             className="w-full sm:w-auto px-8 py-3 bg-gray-900 text-white font-medium rounded-none hover:bg-gray-800 transition-colors duration-200"
           >
-            {isLoggedIn ? "Go to Dashboard" : "Get Started"}
+            {isLoggedIn ? "Turn here for Watchlist" : "Get Started"}
           </button>
         </div>
 
