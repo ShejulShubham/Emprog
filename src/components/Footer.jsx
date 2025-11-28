@@ -1,4 +1,5 @@
 import { Github } from 'lucide-react';
+import metaData from '../meta-data.json';
 
 export default function Footer() {
   return (
@@ -11,7 +12,7 @@ export default function Footer() {
       >
         <Github />
       </a>
-      <p>Version 1.25.11</p>
+      <p>{metaData.version}</p>
     </footer>
   );
 }
