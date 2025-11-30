@@ -3,44 +3,47 @@ import { updateExistingItem } from "../utils/itemHandlers";
 import { formatTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
 
-export default function ItemCard({ item, onItemUpdated, onUpdateItem, onDeleteItem }) {
+export default function ItemCard({
+  item,
+  onItemUpdated,
+  onUpdateItem,
+  onDeleteItem,
+}) {
   const { title, type, progress } = item;
 
-  const {showLoading, hideLoading} = useLoading();
+  const { showLoading, hideLoading } = useLoading();
 
   const hasValidTime = progress.time && progress.time !== "00:00:00";
 
   async function updateOnDoubleClick() {
-
     //TODO: Make this function work for other categories too
-    
+
     const now = new Date().toISOString();
     showLoading();
     try {
-
       const updatedEpisode = String(Number(progress.episode) + 1);
 
-        const updatedData = {
-          title,
-          type,
-          progress: {
-            season: progress.season,
-            time: progress.time,
-            episode: updatedEpisode,
-            videoNumber: progress.videoNumber
-          },
-          update_date: now,
-        };
+      const updatedData = {
+        title,
+        type,
+        progress: {
+          season: progress.season,
+          time: progress.time,
+          episode: updatedEpisode,
+          videoNumber: progress.videoNumber,
+        },
+        update_date: now,
+      };
 
-        // console.log("existing item: ", item);
-        // console.log("updated item ", updatedData);
+      // console.log("existing item: ", item);
+      // console.log("updated item ", updatedData);
 
-        await updateExistingItem(item.id, updatedData);
-        
-        if (onItemUpdated){
-          onItemUpdated({ ...updatedData, id: item.id });
-        }
-      } catch (error) {
+      await updateExistingItem(item.id, updatedData);
+
+      if (onItemUpdated) {
+        onItemUpdated({ ...updatedData, id: item.id });
+      }
+    } catch (error) {
       console.error("Error saving item:", error);
     } finally {
       hideLoading();
@@ -68,7 +71,20 @@ export default function ItemCard({ item, onItemUpdated, onUpdateItem, onDeleteIt
               Season {progress.season}
             </span>
             <span
-              className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold cursor-pointer select-none"
+              className="
+                  bg-purple-100 
+                  text-purple-800 
+                  px-3 py-1 
+                  rounded-full 
+                  text-sm font-semibold 
+                  cursor-pointer select-none 
+                  border border-transparent
+                  hover:bg-purple-200
+                  hover:ring-2 
+                  hover:ring-purple-400 
+                  hover:ring-offset-1
+                  transition-all duration-200
+                "
               onDoubleClick={updateOnDoubleClick}
               title="Double-click to increase episode"
             >
@@ -86,7 +102,20 @@ export default function ItemCard({ item, onItemUpdated, onUpdateItem, onDeleteIt
         return (
           <p className="text-gray-600 text-sm flex flex-wrap gap-2">
             <span
-              className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold cursor-pointer select-none"
+              className="
+                  bg-purple-100 
+                  text-purple-800 
+                  px-3 py-1 
+                  rounded-full 
+                  text-sm font-semibold 
+                  cursor-pointer select-none 
+                  border border-transparent
+                  hover:bg-purple-200
+                  hover:ring-2 
+                  hover:ring-purple-400 
+                  hover:ring-offset-1
+                  transition-all duration-200
+                "
               onDoubleClick={updateOnDoubleClick}
               title="Double-click to increase episode"
             >
@@ -167,7 +196,7 @@ export default function ItemCard({ item, onItemUpdated, onUpdateItem, onDeleteIt
       <h2 className="text-lg font-semibold text-gray-800 flex items-center">
         {title}
       </h2>
-      <p className="text-gray-600 text-sm">Type: {type}</p>
+      <p className="text-gray-600 text-sm mb-2">Type: {type}</p>
       <div>{showInfoByType()}</div>
       <div className="flex justify-between mt-9 gap-2">
         <button
