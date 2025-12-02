@@ -21,7 +21,7 @@ const NavBar = ({ handleLogout }) => {
         {/* Logo */}
         <div className="text-xl font-bold cursor-default">
           {isDirectToDashboard ? (
-            <>Emprog</>
+            <img className="  h-20 w-20 " src="logo_text.png" alt="logo" />
           ) : (
             <NavLink to="/" onClick={() => setIsOpen(false)}>
               <img className="  h-20 w-20 " src="logo_text.png" alt="logo" />
