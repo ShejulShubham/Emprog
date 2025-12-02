@@ -10,10 +10,10 @@ export default function Header() {
   if (location.pathname === '/') {
     return (
       <header className="absolute top-0 left-0 right-0 z-10">
-        <div className="m-1 px-4 sm:px-6 py-6 flex item-center max-w-6xl mx-auto">
+        <div className="m-1 px-2 flex item-center max-w-6xl mx-auto">
           {/* Logo */}
           <div className="text-xl font-light text-gray-900 tracking-tight">
-            Emprog
+            <img className="h-20 w-20" src="logo_text.png" alt="logo" />
           </div>
         </div>
       </header>
@@ -27,8 +27,6 @@ export default function Header() {
   }
 
   return (
-    <header>
       <NavBar handleLogout={handleLogout} />
-    </header>
   );
 }

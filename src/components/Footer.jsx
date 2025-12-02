@@ -1,4 +1,4 @@
-import { Github } from 'lucide-react';
+import { Github, GitMerge, GitPullRequestArrow, Scale } from 'lucide-react';
 import metaData from '../meta-data.json';
 
 const version = createVersion() || "4.0.4";
@@ -12,11 +12,8 @@ function createVersion() {
   const year = now.getFullYear();
   const trimmedYear = new String(year).slice(-2);
   const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
 
-  const newVersion = `${metaData.major}.${trimmedYear}.${month}.${day}`;
-
-  console.log(`Updated version to: ${newVersion}`);
+  const newVersion = `${metaData.major}.${trimmedYear}.${month}`;
 
   return newVersion;
 }
@@ -26,13 +23,18 @@ export default function Footer() {
     <footer className="flex justify-between bg-gray-800 text-gray-400 text-center p-4 mt-6">
       <p>© {new Date().getFullYear()} Emprog. All rights reserved.</p>
       <a
+      title='Find this project on Github'
+      className='hover:scale-105 active:scale-90'
         href="https://github.com/ShejulShubham/Emprog"
         target="_blank"
         rel="noopener noreferrer"
       >
         <Github />
       </a>
-      <p>{version}</p>
+      <button title='Current Version' className='flex hover:scale-105 active:scale-90'>
+        <GitPullRequestArrow className='pr-2' />
+        <p>v{version}</p>
+      </button>
     </footer>
   );
 }

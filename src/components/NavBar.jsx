@@ -16,15 +16,15 @@ const NavBar = ({ handleLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-gray-900 text-white shadow-lg z-50">
-      <nav className="px-6 py-4 flex justify-between items-center">
+    <header className="fixed top-0 left-0 w-full bg-gray-950 text-white shadow-lg z-50">
+      <nav className="px-2 flex justify-between items-center">
         {/* Logo */}
         <div className="text-xl font-bold cursor-default">
           {isDirectToDashboard ? (
             <>Emprog</>
           ) : (
             <NavLink to="/" onClick={() => setIsOpen(false)}>
-              Emprog
+              <img className="  h-20 w-20 " src="logo_text.png" alt="logo" />
             </NavLink>
           )}
         </div>
