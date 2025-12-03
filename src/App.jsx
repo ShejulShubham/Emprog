@@ -1,21 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Auth from "./pages/Auth";
 import Modal from "./components/Modal";
 import { AppProvider } from "./AppContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import RedirectIfNeeded from "./components/RouteGuard";
+import NotFound from "./pages/NotFound";
+import MainLayout from "./layout/MainLayout";
 
 function App() {
   return (
-    <AppProvider>
-      <Modal />
-      <Router>
-        <Header />
-        <main className="pt-20">
-          <Routes>
+    <Router>
+      <AppProvider>
+        <Modal />
+
+        <Routes>
+          {/* GROUP 1: Pages with Header & Footer */}
+          <Route element={<MainLayout />}>
             <Route
               path="/"
               element={
@@ -27,11 +28,14 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/auth" element={<Auth isRegistration={true} />} />
             <Route path="/login" element={<Auth />} />
-          </Routes>
-        </main>
-        <Footer />
-      </Router>
-    </AppProvider>
+          </Route>
+
+          {/* GROUP 2: Standalone Pages */}
+          <Route path="*" element={<NotFound />} />
+          
+        </Routes>
+      </AppProvider>
+    </Router>
   );
 }
 
