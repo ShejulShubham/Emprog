@@ -20,7 +20,7 @@ function createVersion() {
 
 export default function Footer() {
   return (
-    <footer className="flex justify-between bg-gray-800 text-gray-400 text-center p-4 mt-6">
+    <footer className="p-4 mt-8 flex flex-wrap gap-4 justify-between bg-gray-800 text-gray-400 text-center">
       <p>© {new Date().getFullYear()} Emprog. All rights reserved.</p>
       <a
       title='Find this project on Github'
