@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import RedirectIfNeeded from "./components/RouteGuard";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./layout/MainLayout";
+import BookReading from "./pages/BookReading"
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               }
             />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/reading" element={<BookReading />} />
             <Route path="/auth" element={<Auth isRegistration={true} />} />
             <Route path="/login" element={<Auth />} />
           </Route>

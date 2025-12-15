@@ -7,7 +7,7 @@ export default function MainLayout(){
   return (
     <>
       <Header />
-      <main className="pt-20">
+      <main className="min-h-screen pt-20">
         {/* Outlet is where the child route (Home, Dashboard, etc.) renders */}
         <Outlet />
       </main>
