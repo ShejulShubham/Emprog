@@ -1,6 +1,8 @@
 import { createItem, getItems, updateItem, deleteItem } from "../firebase/item";
-import useAuthStore, { selectIsLoggedIn, selectUser } from "../store/useAuthStore";
-
+import useAuthStore, {
+  selectIsLoggedIn,
+  selectUser,
+} from "../store/useAuthStore";
 
 const LOCAL_STORAGE_KEY = "items";
 
@@ -33,18 +35,29 @@ export const addNewItem = async (item) => {
 };
 
 // ✅ Fetch items
-export const fetchItems = async () => {
+export const fetchItems = async (skipLocalSearch = false) => {
   const state = useAuthStore.getState();
   const user = selectUser(state);
   const isLoggedIn = selectIsLoggedIn(state);
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  let localItems = getItemsFromLocal().filter(item => item.userId === user.uid);
+  if(skipLocalSearch){
+    return fetchItemsFromCloud(user);
+  }
+
+  let localItems = getItemsFromLocal().filter(
+    (item) => item.userId === user.uid
+  );
+
   if (localItems.length > 0) {
     return localItems;
   }
 
+  return fetchItemsFromCloud(user);
+};
+
+export const fetchItemsFromCloud = async (user) => {
   const firestoreItems = await getItems(user.uid); // ✅ Firestore query
   saveItemsToLocal(firestoreItems);
 
@@ -61,7 +74,7 @@ export const updateExistingItem = async (id, updatedData) => {
   await updateItem(id, updatedData);
 
   let localItems = getItemsFromLocal();
-  localItems = localItems.map(item =>
+  localItems = localItems.map((item) =>
     item.id === id ? { ...item, ...updatedData } : item
   );
   saveItemsToLocal(localItems);
@@ -77,7 +90,7 @@ export const deleteExistingItem = async (id) => {
   await deleteItem(id);
 
   let localItems = getItemsFromLocal();
-  localItems = localItems.filter(item => item.id !== id);
+  localItems = localItems.filter((item) => item.id !== id);
   saveItemsToLocal(localItems);
 };
 

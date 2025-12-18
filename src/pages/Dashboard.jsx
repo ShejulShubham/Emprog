@@ -19,6 +19,7 @@ import {
   Layers,
   FileText,
   PlayCircle,
+  RotateCcw,
 } from "lucide-react";
 import ItemSkeleton from "../components/skeletons/ItemSkeleton";
 
@@ -59,8 +60,6 @@ export default function Dashboard() {
       try {
         showLoading();
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
         const allItems = await fetchItems();
         setItems(allItems);
       } catch (error) {
@@ -72,6 +71,24 @@ export default function Dashboard() {
     };
     loadItems();
   }, []);
+
+  const reloadItemsFromCloud = async () => {
+    try {
+      showLoading();
+      setIsInitialLoad(true);
+
+      const fetchFromCloud = true;
+
+      const cloudItems = await fetchItems(fetchFromCloud);
+
+      setItems(cloudItems);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      hideLoading();
+      setIsInitialLoad(false);
+    }
+  };
 
   // ✅ Add new item
   const handleItemAdded = (newItem) => {
@@ -161,8 +178,13 @@ export default function Dashboard() {
       </div>
 
       <div className="m-3">
+        <button className="float-right bg-white-700 p-2 rounded-lg shadow-md hover:bg-white-800 hover:shadow-lg transform transition-all duration-200 ease-in hover:scale-110" title="Sync Items from Cloud" onClick={reloadItemsFromCloud}>
+          <RotateCcw />
+        </button>
         {isInitialLoad ? (
-          Array.from({ length: 6 }).map((_, index) => <ItemSkeleton key={index} />)
+          Array.from({ length: 6 }).map((_, index) => (
+            <ItemSkeleton key={index} />
+          ))
         ) : Object.keys(groupedItems).length > 0 ? (
           Object.keys(groupedItems).map((type) => (
             <div key={type} className="mb-8">
