@@ -29,8 +29,7 @@ jobs:
         id: version_calc
         run: |
           node -e '
-            const fs = require("fs");
-            const meta = JSON.parse(fs.readFileSync("./meta-data.json", "utf8"));
+            const meta = require("./meta-data.json");
             
             const now = new Date();
             const year = now.getFullYear();
