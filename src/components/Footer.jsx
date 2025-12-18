@@ -19,6 +19,7 @@ function createVersion() {
 }
 
 export default function Footer() {
+  // TODO: Show latest changes in app if the version is clicked.
   return (
     <footer className="p-4 mt-8 flex flex-wrap gap-4 justify-between bg-gray-800 text-gray-400 text-center">
       <p>© {new Date().getFullYear()} Emprog. All rights reserved.</p>

@@ -100,9 +100,9 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateFields()) return;
+    showLoading();
 
     const now = new Date().toISOString();
-    showLoading();
     try {
       if (isEditMode) {
         const updatedData = {
@@ -143,7 +143,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         setErrors({});
       }
     } catch (error) {
-      console.error("Error saving item:", error);
+      console.error("Error saving item:", error.message);
     } finally {
       hideLoading();
     }

@@ -28,14 +28,10 @@ jobs:
       - name: Calculate Version & Update Files
         id: version_calc
         run: |
-          # 1. We use a small Node script inline to handle the logic cleanly
           node -e '
             const fs = require("fs");
+            const meta = JSON.parse(fs.readFileSync("./meta-data.json", "utf8"));
             
-            // Read the current configuration
-            const meta = require("./meta-data.json");
-            
-            // Get current date components
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -43,21 +39,35 @@ jobs:
             const hours = String(now.getHours()).padStart(2, "0");
             const minutes = String(now.getMinutes()).padStart(2, "0");
             
-            // Construct the version: Major.Year.Month.Day.Time
-            // Example: 1.2025.11.28.1045
             const newVersion = `${meta.major}.${year}.${month}.${day}.${hours}${minutes}`;
             
-            // Update the object
-            meta.version = newVersion;
-            meta.message = process.env.COMMIT_MSG; 
+            // Create the new entry
+            const newEntry = {
+              version: newVersion,
+              message: process.env.COMMIT_MSG || "No message provided",
+              timestamp: now.toISOString()
+            };
+
+            // Initialize history if it doesn't exist
+            if (!meta.history) meta.history = [];
+
+            // Add new entry to the START of the array
+            meta.history.unshift(newEntry);
             
-            // Write back to Root (for storage)
-            fs.writeFileSync("./meta-data.json", JSON.stringify(meta, null, 2));
+            // Optional: Keep only the last 50 commits to save space
+            if (meta.history.length > 50) {
+              meta.history = meta.history.slice(0, 50);
+            }
+
+            // Update the "latest" convenience pointer
+            meta.latest = newEntry;
             
-            // Write to SRC (so React can import it easily)
-            fs.writeFileSync("./src/meta-data.json", JSON.stringify(meta, null, 2));
+            // Sync to files
+            const output = JSON.stringify(meta, null, 2);
+            fs.writeFileSync("./meta-data.json", output);
+            fs.writeFileSync("./src/meta-data.json", output);
             
-            console.log(`Updated version to: ${newVersion}`);
+            console.log(`Updated to version: ${newVersion}`);
           '
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
