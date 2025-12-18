@@ -20,6 +20,7 @@ import {
   FileText,
   PlayCircle,
 } from "lucide-react";
+import ItemSkeleton from "../components/skeletons/ItemSkeleton";
 
 const typeIcons = {
   Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600" />,
@@ -40,25 +41,36 @@ export default function Dashboard() {
 
   const { openModal, closeModal } = useModal();
   const [items, setItems] = useState([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const { showLoading, hideLoading } = useLoading();
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    showLoading();
     if (!isLoggedIn) navigate("/login");
-    hideLoading();
   };
 
   // ✅ Fetch items on mount
   useEffect(() => {
+    handleGetStarted();
     // debugger;
     const loadItems = async () => {
-      const allItems = await fetchItems();
-      setItems(allItems);
+      try {
+        showLoading();
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        const allItems = await fetchItems();
+        setItems(allItems);
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        hideLoading();
+        setIsInitialLoad(false);
+      }
     };
     loadItems();
-    handleGetStarted();
   }, []);
 
   // ✅ Add new item
@@ -149,7 +161,9 @@ export default function Dashboard() {
       </div>
 
       <div className="m-3">
-        {Object.keys(groupedItems).length > 0 ? (
+        {isInitialLoad ? (
+          Array.from({ length: 6 }).map((_, index) => <ItemSkeleton key={index} />)
+        ) : Object.keys(groupedItems).length > 0 ? (
           Object.keys(groupedItems).map((type) => (
             <div key={type} className="mb-8">
               {/* Section Header */}
@@ -175,7 +189,11 @@ export default function Dashboard() {
             </div>
           ))
         ) : (
-          <p>No items found</p>
+          <div className="text-center py-10">
+            <p className="text-gray-500 italic">
+              No items found in your watchlist.
+            </p>
+          </div>
         )}
       </div>
     </div>
