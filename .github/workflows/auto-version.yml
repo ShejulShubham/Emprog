@@ -28,47 +28,44 @@ jobs:
       - name: Calculate Version & Update Files
         id: version_calc
         run: |
-          node -e '
-            const meta = require("./meta-data.json");
+          node <<'EOF'
+            const fs = require("fs");
             
+            // 1. Load the data
+            const meta = JSON.parse(fs.readFileSync("./meta-data.json", "utf8"));
+            
+            // 2. Generate version strings
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, "0");
             const day = String(now.getDate()).padStart(2, "0");
             const hours = String(now.getHours()).padStart(2, "0");
             const minutes = String(now.getMinutes()).padStart(2, "0");
-            
             const newVersion = `${meta.major}.${year}.${month}.${day}.${hours}${minutes}`;
             
-            // Create the new entry
+            // 3. Create the new entry
             const newEntry = {
               version: newVersion,
-              message: process.env.COMMIT_MSG || "No message provided",
+              message: process.env.COMMIT_MSG || "Manual build",
               timestamp: now.toISOString()
             };
 
-            // Initialize history if it doesn't exist
+            // 4. Update History
             if (!meta.history) meta.history = [];
-
-            // Add new entry to the START of the array
             meta.history.unshift(newEntry);
-            
-            // Optional: Keep only the last 50 commits to save space
-            if (meta.history.length > 50) {
-              meta.history = meta.history.slice(0, 50);
-            }
-
-            // Update the "latest" convenience pointer
+            if (meta.history.length > 50) meta.history = meta.history.slice(0, 50);
             meta.latest = newEntry;
             
-            // Sync to files
+            // 5. Write files
             const output = JSON.stringify(meta, null, 2);
             fs.writeFileSync("./meta-data.json", output);
             fs.writeFileSync("./src/meta-data.json", output);
             
-            console.log(`Updated to version: ${newVersion}`);
-          '
+            console.log("Successfully updated version to " + newVersion);
+          EOF
         env:
+          # This is critical: passing the message as an env var 
+          # prevents shell injection/syntax errors from quotes in messages
           COMMIT_MSG: ${{ github.event.head_commit.message }}
 
       - name: Commit and Push Changes
