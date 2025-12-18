@@ -25,14 +25,14 @@ export default function Footer() {
       <p>© {new Date().getFullYear()} Emprog. All rights reserved.</p>
       <a
       title='Find this project on Github'
-      className='hover:scale-105 active:scale-90'
+      className='transform transition-all duration-200 ease-in hover:scale-110 active:scale-90'
         href="https://github.com/ShejulShubham/Emprog"
         target="_blank"
         rel="noopener noreferrer"
       >
         <Github />
       </a>
-      <button title='Current Version' className='flex hover:scale-105 active:scale-90'>
+      <button title='Current Version' className='flex transform transition-all duration-200 ease-in hover:scale-110 active:scale-90'>
         <GitPullRequestArrow className='pr-2' />
         <p>v{version}</p>
       </button>
