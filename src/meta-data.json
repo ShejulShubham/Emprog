@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2025.12.18.1825",
-    "message": "fixed github action",
-    "timestamp": "2025-12-18T18:25:52.858Z"
+    "version": "1.2025.12.19.1709",
+    "message": "Merge pull request #31 from ShejulShubham/development/download-watchlist\n\n[Feature] Download Watchlist",
+    "timestamp": "2025-12-19T17:09:44.929Z"
   },
   "history": [
+    {
+      "version": "1.2025.12.19.1709",
+      "message": "Merge pull request #31 from ShejulShubham/development/download-watchlist\n\n[Feature] Download Watchlist",
+      "timestamp": "2025-12-19T17:09:44.929Z"
+    },
     {
       "version": "1.2025.12.18.1825",
       "message": "fixed github action",
