@@ -42,7 +42,7 @@ export const fetchItems = async (skipLocalSearch = false) => {
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  if(skipLocalSearch){
+  if (skipLocalSearch) {
     return fetchItemsFromCloud(user);
   }
 
@@ -97,4 +97,35 @@ export const deleteExistingItem = async (id) => {
 // ✅ Clear LocalStorage (optional)
 export const clearLocalItems = () => {
   localStorage.removeItem(LOCAL_STORAGE_KEY);
+};
+
+export const downloadItemsAsJSON = async () => {
+  const state = useAuthStore.getState();
+  const user = selectUser(state);
+  const isLoggedIn = selectIsLoggedIn(state);
+
+  if (!isLoggedIn) throw new Error("User not authenticated");
+
+  // 1. Fetch the data
+  const items = await fetchItemsFromCloud(user);
+
+  
+  // 2. Convert data to a JSON string
+  const jsonString = JSON.stringify(items, null, 2);
+  
+  // 3. Create a Blob and a temporary URL
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  
+  // 4. Create a hidden link and trigger click
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `emprog-watchlist-${new Date().toISOString().split("T")[0]}.json`;
+  
+  document.body.appendChild(link);
+  link.click();
+
+  // 5. Cleanup
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };

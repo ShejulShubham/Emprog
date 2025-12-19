@@ -2,7 +2,7 @@ import ItemCard from "../components/ItemCard";
 import { useEffect, useState } from "react";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { useModal } from "../context/modalContext";
-import { fetchItems } from "../utils/itemHandlers";
+import { downloadItemsAsJSON, fetchItems } from "../utils/itemHandlers";
 import { useLoading } from "../context/loadingContext";
 import { useNavigate } from "react-router-dom";
 import useAuthStore, { selectIsLoggedIn } from "../store/useAuthStore";
@@ -20,8 +20,10 @@ import {
   FileText,
   PlayCircle,
   RotateCcw,
+  FileDown,
 } from "lucide-react";
 import ItemSkeleton from "../components/skeletons/ItemSkeleton";
+import ActionMenu from "../components/ActionMenu";
 
 const typeIcons = {
   Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600" />,
@@ -43,6 +45,7 @@ export default function Dashboard() {
   const { openModal, closeModal } = useModal();
   const [items, setItems] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
   const { showLoading, hideLoading } = useLoading();
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
@@ -160,6 +163,13 @@ export default function Dashboard() {
     }, {});
   };
 
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    await downloadItemsAsJSON();
+    setIsExporting(false);
+  };
+
   const groupedItems = groupItemsByType(items);
 
   return (
@@ -178,9 +188,7 @@ export default function Dashboard() {
       </div>
 
       <div className="m-3">
-        <button className="float-right bg-white-700 p-2 rounded-lg shadow-md hover:bg-white-800 hover:shadow-lg transform transition-all duration-200 ease-in hover:scale-110" title="Sync Items from Cloud" onClick={reloadItemsFromCloud}>
-          <RotateCcw />
-        </button>
+        <ActionMenu onDownload={handleExport} onReload={reloadItemsFromCloud} />
         {isInitialLoad ? (
           Array.from({ length: 6 }).map((_, index) => (
             <ItemSkeleton key={index} />

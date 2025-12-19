@@ -29,25 +29,17 @@ const NavBar = ({ handleLogout }) => {
           )}
         </div>
 
-        <div>
+        <div className="group relative">
           {isLoggedIn &&
-            (isDirectToDashboard ? (
-              <button
-                title="Disable Direct to Dashboard"
-                onClick={toggleDirectToDashboard}
-                className="bg-green-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105"
-              >
-                On
-              </button>
-            ) : (
-              <button
-                title="Enable Direct to Dashboard"
-                onClick={toggleDirectToDashboard}
-                className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105"
-              >
-                Off
-              </button>
-            ))}
+            <button
+              onClick={toggleDirectToDashboard}
+              className={isDirectToDashboard ? "px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105 bg-green-100 text-blue-800" : "px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105 bg-purple-100 text-purple-800"}
+            >
+              {isDirectToDashboard ? "On" : "Off"}
+            </button>}
+          <span className="absolute -bottom-20 -left-5 scale-0 transition-all rounded bg-gray-700 p-2 text-xs text-white group-hover:scale-100">
+            Direct To Dashboard
+          </span>
         </div>
 
         {/* Login menu */}

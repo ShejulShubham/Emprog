@@ -23,19 +23,27 @@ export default function Footer() {
   return (
     <footer className="p-4 mt-8 flex flex-wrap gap-4 justify-between bg-gray-800 text-gray-400 text-center">
       <p>© {new Date().getFullYear()} Emprog. All rights reserved.</p>
-      <a
-      title='Find this project on Github'
-      className='transform transition-all duration-200 ease-in hover:scale-110 active:scale-90'
-        href="https://github.com/ShejulShubham/Emprog"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Github />
-      </a>
-      <button title='Current Version' className='flex transform transition-all duration-200 ease-in hover:scale-110 active:scale-90'>
-        <GitPullRequestArrow className='pr-2' />
-        <p>v{version}</p>
-      </button>
+      <div className='group relative hover:bg-white-300' >
+        <a
+          href="https://github.com/ShejulShubham/Emprog"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Github />
+        </a>
+        <span className="absolute -top-10 -left-5 scale-0 transition-all rounded bg-gray-700 p-2 text-xs text-white group-hover:scale-100 z-50">
+          Github
+        </span>
+      </div>
+      <div className='group relative' >
+        <button className='flex'>
+          <GitPullRequestArrow className='pr-2' />
+          <p>v{version}</p>
+        </button>
+        <span className="absolute -top-10 -left-5 scale-0 transition-all rounded bg-gray-700 p-2 text-xs text-white group-hover:scale-100 z-50">
+          Current Version
+        </span>
+      </div>
     </footer>
   );
 }
