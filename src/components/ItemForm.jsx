@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { addNewItem, updateExistingItem } from "../utils/itemHandlers";
+import { addNewItem, updateExistingItem } from "../utils/watchlistHandler";
 import { normalizeTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
 

@@ -45,7 +45,7 @@ const ActionMenu = ({ onDownload, onReload }) => {
             className="flex items-center w-full px-4 py-3 text-sm text-white-300 hover:bg-white-700 transition-colors"
           >
             <Download size={18} className="mr-3" />
-            Export items as JSON
+            Export Watchlist
           </button>
           
           <button

@@ -1,6 +1,6 @@
 import useAuthStore from "../store/useAuthStore";
 import { signIn, signUp, logOut, signInWithGoogle } from "../firebase/auth";
-import { clearLocalItems } from "./itemHandlers";
+import { clearLocalItems } from "./watchlistHandler";
 
 const extractUserData = (firebaseUser) => {
   if (!firebaseUser) return null;
@@ -47,6 +47,7 @@ export const handleGoogleSignIn = async () => {
   }
 };
 
+// TODO: make this function to clear out every single stored value
 export const handleSignOut = async () => {
   try {
     await logOut();
