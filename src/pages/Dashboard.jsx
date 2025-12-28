@@ -1,13 +1,14 @@
-import ItemCard from "../components/ItemCard";
 import { useEffect, useState } from "react";
-import { usePageTitle } from "../hooks/usePageTitle";
-import { useModal } from "../context/modalContext";
-import { downloadItemsAsJSON, fetchItems } from "../utils/itemHandlers";
-import { useLoading } from "../context/loadingContext";
 import { useNavigate } from "react-router-dom";
-import useAuthStore, { selectIsLoggedIn } from "../store/useAuthStore";
+import { usePageTitle } from "../hooks/usePageTitle";
+import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
-import { deleteExistingItem } from "../utils/itemHandlers";
+import ItemSkeleton from "../components/skeletons/ItemSkeleton";
+import ActionMenu from "../components/ActionMenu";
+import { useModal } from "../context/modalContext";
+import { downloadItemsAsJSON, fetchItems, deleteExistingItem } from "../utils/watchlistHandler";
+import { useLoading } from "../context/loadingContext";
+import useAuthStore, { selectIsLoggedIn } from "../store/useAuthStore";
 import {
   Film,
   Tv,
@@ -22,8 +23,6 @@ import {
   RotateCcw,
   FileDown,
 } from "lucide-react";
-import ItemSkeleton from "../components/skeletons/ItemSkeleton";
-import ActionMenu from "../components/ActionMenu";
 
 const typeIcons = {
   Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600" />,

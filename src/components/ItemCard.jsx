@@ -1,5 +1,4 @@
-import React from "react";
-import { updateExistingItem } from "../utils/itemHandlers";
+import { updateExistingItem } from "../utils/watchlistHandler";
 import { formatTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
 

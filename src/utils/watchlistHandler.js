@@ -1,12 +1,15 @@
-import { createItem, getItems, updateItem, deleteItem } from "../firebase/item";
+import { 
+  createWatchlistItem, 
+  getWatchlistItems, 
+  updateWatchlistItem, 
+  deleteWatchlistItem 
+} from "../firebase/watchlist"; // ✅ Pointing to the new file
 import useAuthStore, {
   selectIsLoggedIn,
   selectUser,
 } from "../store/useAuthStore";
 
-// TODO: Once the Watchlist is working fine after 1 month delete all the item related files
-
-const LOCAL_STORAGE_KEY = "items";
+const LOCAL_STORAGE_KEY = "watchlist";
 
 // ✅ Save items to LocalStorage
 export const saveItemsToLocal = (items) => {
@@ -19,7 +22,7 @@ export const getItemsFromLocal = () => {
   return data ? JSON.parse(data) : [];
 };
 
-// ✅ Add new item (with Firestore + LocalStorage)
+// ✅ Add new item
 export const addNewItem = async (item) => {
   const state = useAuthStore.getState();
   const user = selectUser(state);
@@ -27,7 +30,7 @@ export const addNewItem = async (item) => {
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  const newItem = await createItem(item, user.uid);
+  const newItem = await createWatchlistItem(item, user.uid);
 
   const localItems = getItemsFromLocal();
   localItems.push(newItem);
@@ -48,9 +51,9 @@ export const fetchItems = async (skipLocalSearch = false) => {
     return fetchItemsFromCloud(user);
   }
 
-  let localItems = getItemsFromLocal().filter(
-    (item) => item.userId === user.uid
-  );
+  let localItems = getItemsFromLocal();
+
+  console.log("local items: ", localItems);
 
   if (localItems.length > 0) {
     return localItems;
@@ -60,7 +63,8 @@ export const fetchItems = async (skipLocalSearch = false) => {
 };
 
 export const fetchItemsFromCloud = async (user) => {
-  const firestoreItems = await getItems(user.uid); // ✅ Firestore query
+  const firestoreItems = await getWatchlistItems(user.uid); 
+  console.log("firestore item: ", firestoreItems);
   saveItemsToLocal(firestoreItems);
 
   return firestoreItems;
@@ -69,11 +73,12 @@ export const fetchItemsFromCloud = async (user) => {
 // ✅ Update item
 export const updateExistingItem = async (id, updatedData) => {
   const state = useAuthStore.getState();
+  const user = selectUser(state);
   const isLoggedIn = selectIsLoggedIn(state);
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  await updateItem(id, updatedData);
+  await updateWatchlistItem(user.uid, id, updatedData);
 
   let localItems = getItemsFromLocal();
   localItems = localItems.map((item) =>
@@ -85,22 +90,24 @@ export const updateExistingItem = async (id, updatedData) => {
 // ✅ Delete item
 export const deleteExistingItem = async (id) => {
   const state = useAuthStore.getState();
+  const user = selectUser(state);
   const isLoggedIn = selectIsLoggedIn(state);
 
   if (!isLoggedIn) throw new Error("User not authenticated");
-
-  await deleteItem(id);
+  
+  await deleteWatchlistItem(user.uid, id);
 
   let localItems = getItemsFromLocal();
   localItems = localItems.filter((item) => item.id !== id);
   saveItemsToLocal(localItems);
 };
 
-// ✅ Clear LocalStorage (optional)
+// ✅ Clear LocalStorage
 export const clearLocalItems = () => {
   localStorage.removeItem(LOCAL_STORAGE_KEY);
 };
 
+// ✅ Download JSON
 export const downloadItemsAsJSON = async () => {
   const state = useAuthStore.getState();
   const user = selectUser(state);
@@ -108,26 +115,17 @@ export const downloadItemsAsJSON = async () => {
 
   if (!isLoggedIn) throw new Error("User not authenticated");
 
-  // 1. Fetch the data
   const items = await fetchItemsFromCloud(user);
-
-  
-  // 2. Convert data to a JSON string
   const jsonString = JSON.stringify(items, null, 2);
-  
-  // 3. Create a Blob and a temporary URL
   const blob = new Blob([jsonString], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   
-  // 4. Create a hidden link and trigger click
   const link = document.createElement("a");
   link.href = url;
   link.download = `emprog-watchlist-${new Date().toISOString().split("T")[0]}.json`;
   
   document.body.appendChild(link);
   link.click();
-
-  // 5. Cleanup
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
