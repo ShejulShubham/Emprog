@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2025.12.19.1709",
-    "message": "Merge pull request #31 from ShejulShubham/development/download-watchlist\n\n[Feature] Download Watchlist",
-    "timestamp": "2025-12-19T17:09:44.929Z"
+    "version": "1.2025.12.28.1332",
+    "message": "Merge pull request #34 from ShejulShubham/migrate/watchlist\n\n[Migration] Watchlist",
+    "timestamp": "2025-12-28T13:32:57.127Z"
   },
   "history": [
+    {
+      "version": "1.2025.12.28.1332",
+      "message": "Merge pull request #34 from ShejulShubham/migrate/watchlist\n\n[Migration] Watchlist",
+      "timestamp": "2025-12-28T13:32:57.127Z"
+    },
     {
       "version": "1.2025.12.19.1709",
       "message": "Merge pull request #31 from ShejulShubham/development/download-watchlist\n\n[Feature] Download Watchlist",
