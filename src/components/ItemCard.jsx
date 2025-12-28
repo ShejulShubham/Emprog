@@ -34,9 +34,6 @@ export default function ItemCard({
         update_date: now,
       };
 
-      // console.log("existing item: ", item);
-      // console.log("updated item ", updatedData);
-
       await updateExistingItem(item.id, updatedData);
 
       if (onItemUpdated) {
