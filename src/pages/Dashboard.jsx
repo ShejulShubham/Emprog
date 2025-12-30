@@ -24,10 +24,8 @@ import {
   Layers,
   FileText,
   PlayCircle,
-  Search,
-  RotateCcw,
-  RefreshCcw,
 } from "lucide-react";
+import Item from "../components/Item";
 
 const typeIcons = {
   Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
@@ -60,6 +58,7 @@ const typeIcons = {
 };
 
 export default function Dashboard() {
+  // TODO: Change this page to Watchlist
   usePageTitle("Dashboard");
 
   const { openModal, closeModal } = useModal();
@@ -86,7 +85,6 @@ export default function Dashboard() {
   // ✅ Fetch items on mount
   useEffect(() => {
     handleGetStarted();
-    // debugger;
     const loadItems = async () => {
       try {
         showLoading();
@@ -213,6 +211,20 @@ export default function Dashboard() {
     );
   };
 
+  // ✅ Set item as completed
+  function handleCompletedItem(updatedItem) {
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  }
+
+  // ✅ Open item in modal
+  function openItemInModal(item) {
+    openModal(
+      <Item item={item} onUpdateItem={handleUpdateItem} onDeleteItem={handleDeleteItem} onCompletedItem={handleCompletedItem} />
+    )
+  }
+
   const groupItemsByType = (items) => {
     return items.reduce((acc, item) => {
       if (!acc[item.type]) acc[item.type] = [];
@@ -306,6 +318,7 @@ export default function Dashboard() {
         </button>
       </div>
 
+      {/* TODO: Make two section for current and completed watchlist */}
       <div className="m-3">
         <div className="flex justify-between border-lg border-gray-800 rounded-lg dark:text-white">
           <div className="my-auto w-5/6">
@@ -383,58 +396,26 @@ export default function Dashboard() {
                       {type}
                     </h2>
 
-                    {/* Items Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {sortedGroupedItems[type].map((item) => (
-                        <ItemCard
-                          key={item.id}
-                          item={item}
-                          onItemUpdated={handleItemUpdated}
-                          onUpdateItem={handleUpdateItem}
-                          onDeleteItem={handleDeleteItem}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {sortedGroupedItems.map((item) => (
+              {/* Items Row (always horizontal scroll) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {groupedItems[type].map((item) => (
+                  <button key={item.id} onClick={() => openItemInModal(item)} >
                     <ItemCard
-                      key={item.id}
                       item={item}
                       onItemUpdated={handleItemUpdated}
-                      onUpdateItem={handleUpdateItem}
-                      onDeleteItem={handleDeleteItem}
                     />
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-gray-500 dark:text-gray-400 italic text-lg">
-                No items found in your watchlist.
-              </p>
+                  </button>
+                ))}
+              </div>
             </div>
-          )) :
-          Object.keys(searchedItems).length > 0 ? (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-6">
-            {searchedItems.map((item) => (
-              <ItemCard
-                key={item.id}
-                item={item}
-                onItemUpdated={handleItemUpdated}
-                onUpdateItem={handleUpdateItem}
-                onDeleteItem={handleDeleteItem}
-              />
-            ))}
-          </div>) : (
-            <div className="text-center py-20">
-              <p className="text-gray-500 dark:text-gray-400 italic text-lg">
-                No items found!
-              </p>
-            </div>
-          )}
+          ))
+        ) : (
+          <div className="text-center py-10">
+            <p className="text-gray-500 italic">
+              No items found in your watchlist.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
