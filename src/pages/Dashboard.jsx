@@ -20,9 +20,8 @@ import {
   Layers,
   FileText,
   PlayCircle,
-  RotateCcw,
-  FileDown,
 } from "lucide-react";
+import Item from "../components/Item";
 
 const typeIcons = {
   Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600" />,
@@ -39,6 +38,7 @@ const typeIcons = {
 };
 
 export default function Dashboard() {
+  // TODO: Change this page to Watchlist
   usePageTitle("Dashboard");
 
   const { openModal, closeModal } = useModal();
@@ -57,7 +57,6 @@ export default function Dashboard() {
   // ✅ Fetch items on mount
   useEffect(() => {
     handleGetStarted();
-    // debugger;
     const loadItems = async () => {
       try {
         showLoading();
@@ -154,6 +153,20 @@ export default function Dashboard() {
     );
   };
 
+  // ✅ Set item as completed
+  function handleCompletedItem(updatedItem) {
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  }
+
+  // ✅ Open item in modal
+  function openItemInModal(item) {
+    openModal(
+      <Item item={item} onUpdateItem={handleUpdateItem} onDeleteItem={handleDeleteItem} onCompletedItem={handleCompletedItem} />
+    )
+  }
+
   const groupItemsByType = (items) => {
     return items.reduce((acc, item) => {
       if (!acc[item.type]) acc[item.type] = [];
@@ -186,6 +199,7 @@ export default function Dashboard() {
         </button>
       </div>
 
+      {/* TODO: Make two section for current and completed watchlist */}
       <div className="m-3">
         <ActionMenu onDownload={handleExport} onReload={reloadItemsFromCloud} />
         {isInitialLoad ? (
@@ -206,13 +220,12 @@ export default function Dashboard() {
               {/* Items Row (always horizontal scroll) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {groupedItems[type].map((item) => (
-                  <ItemCard
-                    key={item.id}
-                    item={item}
-                    onItemUpdated={handleItemUpdated}
-                    onUpdateItem={handleUpdateItem}
-                    onDeleteItem={handleDeleteItem}
-                  />
+                  <button key={item.id} onClick={() => openItemInModal(item)} >
+                    <ItemCard
+                      item={item}
+                      onItemUpdated={handleItemUpdated}
+                    />
+                  </button>
                 ))}
               </div>
             </div>

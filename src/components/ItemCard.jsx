@@ -5,8 +5,6 @@ import { useLoading } from "../context/loadingContext";
 export default function ItemCard({
   item,
   onItemUpdated,
-  onUpdateItem,
-  onDeleteItem,
 }) {
   const { title, type, progress } = item;
 
@@ -190,24 +188,10 @@ export default function ItemCard({
       className="bg-white rounded-lg shadow-md p-4 transition-transform transform hover:scale-105 hover:shadow-xl hover:bg-gray-50"
     >
       <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-        {title}
+        {title} 
       </h2>
-      <p className="text-gray-600 text-sm mb-2">Type: {type}</p>
+      <p className="text-left text-gray-600 text-sm mb-2">Type: {type}</p>
       <div>{showInfoByType()}</div>
-      <div className="flex justify-between mt-9 gap-2">
-        <button
-          onClick={() => onUpdateItem(item)}
-          className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transform transition-all duration-200 hover:scale-105"
-        >
-          Update
-        </button>
-        <button
-          onClick={() => onDeleteItem(item.id)}
-          className="px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-full shadow-md hover:bg-red-700 hover:shadow-lg transform transition-all duration-200 hover:scale-105"
-        >
-          Delete
-        </button>
-      </div>
     </div>
   );
 }
