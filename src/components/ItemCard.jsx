@@ -50,13 +50,34 @@ export default function ItemCard({
   }
 
   const showInfoByType = () => {
+    // Helper for consistent badge styling
+    const Badge = ({ children, color = "purple", onDoubleClick, title }) => {
+      const colorClasses = {
+        purple: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+        blue: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      };
+
+      return (
+        <span
+          onDoubleClick={onDoubleClick}
+          title={title}
+          className={`${colorClasses[color]} px-2 py-1 rounded-full text-sm font-semibold transition-all duration-200 
+          ${onDoubleClick ? 'cursor-pointer select-none hover:ring-2 hover:ring-purple-400 dark:hover:ring-purple-500 hover:ring-offset-1 dark:ring-offset-slate-900' : ''}`}
+        >
+          {children}
+        </span>
+      );
+    };
+
+    const progressContainerClass = "text-gray-600 dark:text-gray-400 text-sm flex flex-wrap gap-2";
+
     switch (type) {
       case "Movie":
       case "Documentary":
         return (
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
             Progress:{" "}
-            <span className="font-semibold text-blue-600">
+            <span className="font-semibold text-blue-600 dark:text-blue-400">
               {formatTime(progress.time)}
             </span>
           </p>
@@ -64,121 +85,51 @@ export default function ItemCard({
 
       case "Series":
       case "Anime":
-        return (
-          <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Season {progress.season}
-            </span>
-            <span
-              className="
-                  bg-purple-100 
-                  text-purple-800 
-                  px-3 py-1 
-                  rounded-full 
-                  text-sm font-semibold 
-                  cursor-pointer select-none 
-                  border border-transparent
-                  hover:bg-purple-200
-                  hover:ring-2 
-                  hover:ring-purple-400 
-                  hover:ring-offset-1
-                  transition-all duration-200
-                "
-              onDoubleClick={updateOnDoubleClick}
-              title="Double-click to increase episode"
-            >
-              Episode {progress.episode}
-            </span>
-            {hasValidTime && (
-              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">
-                {formatTime(progress.time)}
-              </span>
-            )}
-          </p>
-        );
-
       case "Podcast":
         return (
-          <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span
-              className="
-                  bg-purple-100 
-                  text-purple-800 
-                  px-3 py-1 
-                  rounded-full 
-                  text-sm font-semibold 
-                  cursor-pointer select-none 
-                  border border-transparent
-                  hover:bg-purple-200
-                  hover:ring-2 
-                  hover:ring-purple-400 
-                  hover:ring-offset-1
-                  transition-all duration-200
-                "
+          <p className={progressContainerClass}>
+            {progress.season && <Badge>Season {progress.season}</Badge>}
+            <Badge
               onDoubleClick={updateOnDoubleClick}
               title="Double-click to increase episode"
             >
               Episode {progress.episode}
-            </span>
-            {hasValidTime && (
-              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">
-                {formatTime(progress.time)}
-              </span>
-            )}
+            </Badge>
+            {hasValidTime && <Badge color="blue">{formatTime(progress.time)}</Badge>}
           </p>
         );
 
       case "Audiobook":
         return (
-          <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Track {progress.track}
-            </span>
-            {hasValidTime && (
-              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">
-                {formatTime(progress.time)}
-              </span>
-            )}
+          <p className={progressContainerClass}>
+            <Badge>Track {progress.track}</Badge>
+            {hasValidTime && <Badge color="blue">{formatTime(progress.time)}</Badge>}
           </p>
         );
 
       case "Lecture":
       case "Other":
         return (
-          <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Video #{progress.videoNumber}
-            </span>
-            {hasValidTime && (
-              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">
-                {formatTime(progress.time)}
-              </span>
-            )}
+          <p className={progressContainerClass}>
+            <Badge>Video #{progress.videoNumber}</Badge>
+            {hasValidTime && <Badge color="blue">{formatTime(progress.time)}</Badge>}
           </p>
         );
 
       case "Course":
         return (
-          <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Module {progress.module}
-            </span>
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Lesson {progress.lesson}
-            </span>
+          <p className={progressContainerClass}>
+            <Badge>Module {progress.module}</Badge>
+            <Badge>Lesson {progress.lesson}</Badge>
           </p>
         );
 
       case "Manga":
       case "Webtoon":
         return (
-          <p className="text-gray-600 text-sm flex flex-wrap gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Chapter {progress.chapter}
-            </span>
-            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">
-              Page {progress.page}
-            </span>
+          <p className={progressContainerClass}>
+            <Badge>Chapter {progress.chapter}</Badge>
+            <Badge>Page {progress.page}</Badge>
           </p>
         );
 
@@ -190,23 +141,25 @@ export default function ItemCard({
   return (
     <div
       id={item.id}
-      className="bg-white rounded-lg shadow-md p-4 transition-transform transform hover:scale-105 hover:shadow-xl hover:bg-gray-50"
+      className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:scale-105 hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
     >
-      <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
         {title}
       </h2>
-      <p className="text-gray-600 text-sm mb-2">Type: {type}</p>
-      <div>{showInfoByType()}</div>
-      <div className="flex justify-between mt-9 gap-2">
+      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Type: {type}</p>
+
+      <div className="mb-6">{showInfoByType()}</div>
+
+      <div className="flex justify-between gap-2">
         <button
           onClick={() => onUpdateItem(item)}
-          className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transform transition-all duration-200 hover:scale-105"
+          className="flex-1 px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white text-sm font-semibold rounded-full shadow-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-all active:scale-95"
         >
           Update
         </button>
         <button
           onClick={() => onDeleteItem(item.id)}
-          className="px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-full shadow-md hover:bg-red-700 hover:shadow-lg transform transition-all duration-200 hover:scale-105"
+          className="flex-1 px-4 py-2 bg-red-600 dark:bg-red-900/40 text-white dark:text-red-400 text-sm font-semibold rounded-full shadow-md hover:bg-red-700 dark:hover:bg-red-900/60 transition-all active:scale-95 border border-transparent dark:border-red-900/50"
         >
           Delete
         </button>

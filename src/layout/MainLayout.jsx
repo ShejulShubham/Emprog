@@ -7,7 +7,7 @@ export default function MainLayout(){
   return (
     <>
       <Header />
-      <main className="pt-20">
+      <main className="pt-20 bg-white dark:bg-slate-950 transition-colors duration-300">
         {/* Outlet is where the child route (Home, Dashboard, etc.) renders */}
         <Outlet />
       </main>

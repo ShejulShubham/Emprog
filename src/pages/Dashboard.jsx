@@ -25,17 +25,17 @@ import {
 } from "lucide-react";
 
 const typeIcons = {
-  Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Documentary: <Film className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Series: <Tv className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Anime: <Tv className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Podcast: <Mic className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Audiobook: <Headphones className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Lecture: <GraduationCap className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Course: <Layers className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Manga: <BookOpen className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Webtoon: <Book className="w-4 h-4 inline mr-1 text-gray-600" />,
-  Other: <FileText className="w-4 h-4 inline mr-1 text-gray-600" />,
+  Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Documentary: <Film className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Series: <Tv className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Anime: <Tv className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Podcast: <Mic className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Audiobook: <Headphones className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Lecture: <GraduationCap className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Course: <Layers className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Manga: <BookOpen className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Webtoon: <Book className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Other: <FileText className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
 };
 
 export default function Dashboard() {
@@ -120,20 +120,26 @@ export default function Dashboard() {
   // ✅ Delete item with confirmation popup
   const handleDeleteItem = (id) => {
     openModal(
-      <div className="p-6 bg-white rounded-lg shadow-lg max-w-md w-full text-center">
-        <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
-        <p className="text-gray-600 mb-6">
-          Are you sure you want to delete this item?
+      <div className="p-6 bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-md w-full text-center border border-transparent dark:border-slate-800 transition-all">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Confirm Deletion
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
+          Are you sure you want to delete this item? This action cannot be undone.
         </p>
+
         <div className="flex justify-center gap-4">
+          {/* Cancel Button */}
           <button
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+            className="bg-gray-200 dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-5 py-2 rounded hover:bg-gray-300 dark:hover:bg-slate-700 transition-colors"
             onClick={closeModal}
           >
             Cancel
           </button>
+
+          {/* Delete Button */}
           <button
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 dark:hover:bg-red-500 shadow-md shadow-red-500/20 transition-colors"
             onClick={async () => {
               try {
                 await deleteExistingItem(id);
@@ -172,14 +178,15 @@ export default function Dashboard() {
   const groupedItems = groupItemsByType(items);
 
   return (
-    <div className="min-h-screen px-4 bg-gray-50">
-      <div className="bg-gray-100 text-gray-800 p-6 shadow-sm flex justify-between">
+    <div className="min-h-screen px-4 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+      {/* Header Section */}
+      <div className="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-white p-6 shadow-sm flex justify-between items-center rounded-b-xl transition-colors duration-300">
         <div>
           <h1 className="text-2xl font-bold">Your Watchlist</h1>
-          <p className="text-gray-600">Track your shows, movies, and more.</p>
+          <p className="text-gray-600 dark:text-gray-400">Track your shows, movies, and more.</p>
         </div>
         <button
-          className="bg-gray-600 text-white p-2 rounded-lg font-medium shadow-md hover:bg-gray-800 hover:shadow-lg transform transition-all duration-200 ease-in hover:scale-110"
+          className="bg-gray-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg font-medium shadow-md hover:bg-gray-800 dark:hover:bg-gray-100 transform transition-all duration-300 ease-in hover:scale-105"
           onClick={() => openModal(<ItemForm onItemAdded={handleItemAdded} />)}
         >
           Add New Entry
@@ -187,23 +194,27 @@ export default function Dashboard() {
       </div>
 
       <div className="m-3">
+        {/* Action Menu (Ensure this component also has dark: classes inside it) */}
         <ActionMenu onDownload={handleExport} onReload={reloadItemsFromCloud} />
+
         {isInitialLoad ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <ItemSkeleton key={index} />
-          ))
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <ItemSkeleton key={index} />
+            ))}
+          </div>
         ) : Object.keys(groupedItems).length > 0 ? (
           Object.keys(groupedItems).map((type) => (
             <div key={type} className="mb-8">
               {/* Section Header */}
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
                 {typeIcons[type] || (
-                  <PlayCircle className="w-4 h-4 inline mr-1 text-gray-500" />
+                  <PlayCircle className="w-5 h-5 inline mr-1 text-gray-500 dark:text-gray-400" />
                 )}
                 {type}
               </h2>
 
-              {/* Items Row (always horizontal scroll) */}
+              {/* Items Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {groupedItems[type].map((item) => (
                   <ItemCard
@@ -218,8 +229,8 @@ export default function Dashboard() {
             </div>
           ))
         ) : (
-          <div className="text-center py-10">
-            <p className="text-gray-500 italic">
+          <div className="text-center py-20">
+            <p className="text-gray-500 dark:text-gray-400 italic text-lg">
               No items found in your watchlist.
             </p>
           </div>
