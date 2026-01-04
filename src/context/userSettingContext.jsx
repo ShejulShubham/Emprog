@@ -1,33 +1,44 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const userSettingsContext = createContext();
 
 const storageKey = "user-settings";
 
 export default function UserSettingsProvider({ children }) {
-    // TODO: fix this for reloading of page
-    const [isDarkMode, SetIsDarkMode] = useState(localStorage.getItem(storageKey).theme === 'dark' || (!((storageKey) in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    );
+    const [isDarkMode, setIsDarkMode] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    console.log("Theme: ", isDarkMode);
+    useEffect(() => {
+        if ((storageKey in localStorage)) {
+            const localThemeSetting = JSON.parse(localStorage.getItem(storageKey)).theme === "dark";
+            setIsDarkMode(localThemeSetting);
+        }
+    }, [])
+    
+    useEffect(() => {
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
 
-    if (isDarkMode) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
+        saveThemeToLocalStorage(isDarkMode);
 
-    function toggleTheme() {
-        SetIsDarkMode(prev => !prev);
+    }, [isDarkMode]);
 
+    function saveThemeToLocalStorage(setToDarkMode) {
         const userSettings = JSON.parse(localStorage.getItem(storageKey));
 
         const newSettings = {
             ...userSettings,
-            theme: isDarkMode ? "light" : "dark"
+            theme: setToDarkMode ? "dark" : "light"
         }
 
         localStorage.setItem(storageKey, JSON.stringify(newSettings));
+    }
+
+
+    function toggleTheme() {
+        setIsDarkMode(prev => !prev);
     }
 
 
