@@ -150,220 +150,86 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   };
 
   const renderDynamicFields = () => {
+    // Reusable component for form fields to keep code dry
+    const InputField = ({ label, type = "text", value, placeholder, field }) => (
+      <div className="mb-4">
+        <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+          {label}
+        </label>
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => handleProgressChange(field, e.target.value)}
+          placeholder={placeholder}
+          className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+        />
+      </div>
+    );
+
     switch (type) {
       case "Movie":
       case "Documentary":
         return (
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Time Progress
-            </label>
-            <input
-              type="text"
-              value={progress.time}
-              onChange={(e) => handleProgressChange("time", e.target.value)}
-              placeholder="e.g., 01:45:23"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <InputField
+            label="Time Progress"
+            value={progress.time}
+            field="time"
+            placeholder="e.g., 01:45:23"
+          />
         );
+
       case "Series":
       case "Anime":
         return (
-          <>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Season
-              </label>
-              <input
-                type="number"
-                value={progress.season}
-                onChange={(e) => handleProgressChange("season", e.target.value)}
-                placeholder="Enter season number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Episode
-              </label>
-              <input
-                type="number"
-                value={progress.episode}
-                onChange={(e) =>
-                  handleProgressChange("episode", e.target.value)
-                }
-                placeholder="Enter episode number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Time in Episode
-              </label>
-              <input
-                type="text"
-                value={progress.time}
-                onChange={(e) => handleProgressChange("time", e.target.value)}
-                placeholder="e.g., 00:23:15"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </>
+          <div className="space-y-4">
+            <InputField label="Season" type="number" value={progress.season} field="season" placeholder="Enter season number" />
+            <InputField label="Episode" type="number" value={progress.episode} field="episode" placeholder="Enter episode number" />
+            <InputField label="Time in Episode" value={progress.time} field="time" placeholder="e.g., 00:23:15" />
+          </div>
         );
+
       case "Podcast":
         return (
-          <>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Episode Number
-              </label>
-              <input
-                type="number"
-                value={progress.episode}
-                onChange={(e) =>
-                  handleProgressChange("episode", e.target.value)
-                }
-                placeholder="Enter episode number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Time Progress
-              </label>
-              <input
-                type="text"
-                value={progress.time}
-                onChange={(e) => handleProgressChange("time", e.target.value)}
-                placeholder="e.g., 00:15:30"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </>
+          <div className="space-y-4">
+            <InputField label="Episode Number" type="number" value={progress.episode} field="episode" placeholder="Enter episode number" />
+            <InputField label="Time Progress" value={progress.time} field="time" placeholder="e.g., 00:15:30" />
+          </div>
         );
+
       case "Audiobook":
         return (
-          <>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Track Number
-              </label>
-              <input
-                type="number"
-                value={progress.track}
-                onChange={(e) => handleProgressChange("track", e.target.value)}
-                placeholder="Enter track number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Time Progress
-              </label>
-              <input
-                type="text"
-                value={progress.time}
-                onChange={(e) => handleProgressChange("time", e.target.value)}
-                placeholder="e.g., 00:30:15"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </>
+          <div className="space-y-4">
+            <InputField label="Track Number" type="number" value={progress.track} field="track" placeholder="Enter track number" />
+            <InputField label="Time Progress" value={progress.time} field="time" placeholder="e.g., 00:30:15" />
+          </div>
         );
+
       case "Lecture":
       case "Other":
         return (
-          <>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Video Number
-              </label>
-              <input
-                type="number"
-                value={progress.videoNumber}
-                onChange={(e) =>
-                  handleProgressChange("videoNumber", e.target.value)
-                }
-                placeholder="Enter video number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Time Progress
-              </label>
-              <input
-                type="text"
-                value={progress.time}
-                onChange={(e) => handleProgressChange("time", e.target.value)}
-                placeholder="e.g., 00:10:05"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </>
+          <div className="space-y-4">
+            <InputField label="Video Number" type="number" value={progress.videoNumber} field="videoNumber" placeholder="Enter video number" />
+            <InputField label="Time Progress" value={progress.time} field="time" placeholder="e.g., 00:10:05" />
+          </div>
         );
+
       case "Course":
         return (
-          <>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Module
-              </label>
-              <input
-                type="number"
-                value={progress.module}
-                onChange={(e) => handleProgressChange("module", e.target.value)}
-                placeholder="Enter module number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Lesson
-              </label>
-              <input
-                type="number"
-                value={progress.lesson}
-                onChange={(e) => handleProgressChange("lesson", e.target.value)}
-                placeholder="Enter lesson number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </>
+          <div className="space-y-4">
+            <InputField label="Module" type="number" value={progress.module} field="module" placeholder="Enter module number" />
+            <InputField label="Lesson" type="number" value={progress.lesson} field="lesson" placeholder="Enter lesson number" />
+          </div>
         );
+
       case "Manga":
       case "Webtoon":
         return (
-          <>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Chapter
-              </label>
-              <input
-                type="number"
-                value={progress.chapter}
-                onChange={(e) =>
-                  handleProgressChange("chapter", e.target.value)
-                }
-                placeholder="Enter chapter number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Page
-              </label>
-              <input
-                type="number"
-                value={progress.page}
-                onChange={(e) => handleProgressChange("page", e.target.value)}
-                placeholder="Enter page number"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </>
+          <div className="space-y-4">
+            <InputField label="Chapter" type="number" value={progress.chapter} field="chapter" placeholder="Enter chapter number" />
+            <InputField label="Page" type="number" value={progress.page} field="page" placeholder="Enter page number" />
+          </div>
         );
+
       default:
         return null;
     }
@@ -372,71 +238,78 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-3 rounded-xl shadow-lg max-w-md mx-auto space-y-5"
+      className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-lg max-w-md mx-auto space-y-5 border border-transparent dark:border-slate-800 transition-colors duration-300"
     >
-      <h2 className="text-2xl font-semibold text-gray-800 text-center">
+      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white text-center">
         {isEditMode ? "Update Entry" : "Add New Entry"}
       </h2>
 
+      {/* Title Input */}
       <div>
-        <label className="block text-gray-700 font-medium mb-1">Title</label>
+        <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">Title</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter title"
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
         />
         {errors.title && (
-          <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+          <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.title}</p>
         )}
       </div>
 
+      {/* Type Selector */}
       {!isEditMode && (
         <div>
-          <label className="block text-gray-700 font-medium mb-1">
+          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
             Type of Entry
           </label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 transition-all"
           >
-            <option value="">Select type</option>
-            <option value="Movie">Movie</option>
-            <option value="Series">Series</option>
-            <option value="Anime">Anime</option>
-            <option value="Podcast">Podcast</option>
-            <option value="Audiobook">Audiobook</option>
-            <option value="Documentary">Documentary</option>
-            <option value="Lecture">Lecture</option>
-            <option value="Course">Course</option>
-            <option value="Manga">Manga</option>
-            <option value="Webtoon">Webtoon</option>
-            <option value="Other">Other</option>
+            <option value="" className="dark:bg-slate-800">Select type</option>
+            <option value="Movie" className="dark:bg-slate-800">Movie</option>
+            <option value="Series" className="dark:bg-slate-800">Series</option>
+            <option value="Anime" className="dark:bg-slate-800">Anime</option>
+            <option value="Podcast" className="dark:bg-slate-800">Podcast</option>
+            <option value="Audiobook" className="dark:bg-slate-800">Audiobook</option>
+            <option value="Documentary" className="dark:bg-slate-800">Documentary</option>
+            <option value="Lecture" className="dark:bg-slate-800">Lecture</option>
+            <option value="Course" className="dark:bg-slate-800">Course</option>
+            <option value="Manga" className="dark:bg-slate-800">Manga</option>
+            <option value="Webtoon" className="dark:bg-slate-800">Webtoon</option>
+            <option value="Other" className="dark:bg-slate-800">Other</option>
           </select>
           {errors.type && (
-            <p className="text-red-500 text-sm mt-1">{errors.type}</p>
+            <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.type}</p>
           )}
         </div>
       )}
 
-      {renderDynamicFields()}
+      {/* Dynamic Fields Container */}
+      <div className="dark:text-gray-200">
+        {renderDynamicFields()}
+      </div>
+
       {errors.progress && (
-        <p className="text-red-500 text-sm mt-1">{errors.progress}</p>
+        <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.progress}</p>
       )}
 
+      {/* Submit/Loading Button */}
       {isLoading ? (
         <button
-          className="w-full bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-not-allowed"
-          disabled="true"
+          className="w-full bg-blue-800 dark:bg-blue-900 text-white py-2 rounded-lg font-medium transition-colors cursor-not-allowed opacity-70"
+          disabled
         >
           {isEditMode ? "Updating..." : "Submitting..."}
         </button>
       ) : (
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          className="w-full bg-blue-600 dark:bg-blue-700 text-white py-2 rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-all active:scale-[0.98]"
         >
           {isEditMode ? "Update" : "Submit"}
         </button>

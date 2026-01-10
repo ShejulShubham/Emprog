@@ -18,7 +18,7 @@ const NavBar = ({ handleLogout }) => {
 
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-950 text-white shadow-lg z-50">
-      <nav className="px-2 flex justify-between items-center flex-wrap">
+      <nav className="px-4 flex justify-between items-center flex-wrap">
         {/* Logo */}
         <div className="text-xl font-bold cursor-default">
           {isDirectToDashboard ? (

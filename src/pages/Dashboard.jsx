@@ -178,9 +178,9 @@ export default function Dashboard() {
   const groupedItems = groupItemsByType(items);
 
   return (
-    <div className="min-h-screen px-4 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen p-4 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       {/* Header Section */}
-      <div className="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-white p-6 shadow-sm flex justify-between items-center rounded-b-xl transition-colors duration-300">
+      <div className="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-white p-6 shadow-sm flex justify-between items-center rounded-xl transition-colors duration-300">
         <div>
           <h1 className="text-2xl font-bold">Your Watchlist</h1>
           <p className="text-gray-600 dark:text-gray-400">Track your shows, movies, and more.</p>
