@@ -9,12 +9,11 @@ const NavBar = ({ handleLogout }) => {
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
   const { settings, updateSetting } = useUserSettings();
   const isDirectToDashboard = settings.directToDashboard;
+  const [openMenu, setOpenMenu] = useState(false);
 
   function toggleDirectToDashboard() {
     updateSetting("directToDashboard", !settings.directToDashboard);
   }
-
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-950 text-white shadow-lg z-50">
@@ -30,7 +29,7 @@ const NavBar = ({ handleLogout }) => {
           )}
         </div>
 
-        <div className="hidden sm:block scale-75">
+        <div className="block scale-75">
           <DarkMode />
         </div>
 
@@ -47,14 +46,36 @@ const NavBar = ({ handleLogout }) => {
         )}
 
         {/* TODO: Create dropdown menu */}
-        {isLoggedIn && (  
+        {isLoggedIn && (
           <div className="sm:hidden">
             <label>
               <div className="w-9 h-10 cursor-pointer flex flex-col items-center justify-center">
-                <input className="hidden peer" type="checkbox" />
+                <input
+                  checked={openMenu}
+                  onChange={() => {
+                    setOpenMenu((prev) => !prev);
+                  }}
+                  className="hidden peer"
+                  type="checkbox"
+                />
                 <div className="w-[50%] h-[2px] bg-white rounded-sm transition-all duration-300 origin-left translate-y-[0.45rem] peer-checked:rotate-[-45deg]" />
                 <div className="w-[50%] h-[2px] bg-white rounded-md transition-all duration-300 origin-center peer-checked:hidden" />
                 <div className="w-[50%] h-[2px] bg-white rounded-md transition-all duration-300 origin-left -translate-y-[0.45rem] peer-checked:rotate-[45deg]" />
+              </div>
+              <div className={openMenu ? "group relative" : "hidden"}>
+                <button
+                  onClick={toggleDirectToDashboard}
+                  className={
+                    isDirectToDashboard
+                      ? "px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105 bg-green-100 text-blue-800"
+                      : "px-2 py-1 rounded-full text-sm font-semibold transition-transform transform hover:scale-105 bg-purple-100 text-purple-800"
+                  }
+                >
+                  {isDirectToDashboard ? "On" : "Off"}
+                </button>
+                <span className="absolute -bottom-20 -left-5 scale-0 transition-all rounded bg-gray-700 p-2 text-xs text-white group-hover:scale-100">
+                  Direct To Dashboard
+                </span>
               </div>
             </label>
           </div>
