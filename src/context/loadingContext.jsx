@@ -3,7 +3,7 @@ import { LoadingScreen } from "../components/Loading";
 
 const LoadingContext = createContext();
 
-export const LoadingProvider = ({ children }) => {
+export default function LoadingProvider({ children }){
   const [isLoading, setIsLoading] = useState(false);
 
   const showLoading = () => setIsLoading(true);

@@ -53,8 +53,6 @@ export const fetchItems = async (skipLocalSearch = false) => {
 
   let localItems = getItemsFromLocal();
 
-  console.log("local items: ", localItems);
-
   if (localItems.length > 0) {
     return localItems;
   }
@@ -64,7 +62,6 @@ export const fetchItems = async (skipLocalSearch = false) => {
 
 export const fetchItemsFromCloud = async (user) => {
   const firestoreItems = await getWatchlistItems(user.uid); 
-  console.log("firestore item: ", firestoreItems);
   saveItemsToLocal(firestoreItems);
 
   return firestoreItems;
