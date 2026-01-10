@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2026.01.10.1422",
-    "message": "Merge pull request #35 from ShejulShubham/development/dark-mode\n\nAdded Dark Mode.",
-    "timestamp": "2026-01-10T14:22:33.651Z"
+    "version": "1.2026.01.10.1649",
+    "message": "Merge pull request #36 from ShejulShubham/development/dark-mode\n\nFixed Mobile View",
+    "timestamp": "2026-01-10T16:49:41.040Z"
   },
   "history": [
+    {
+      "version": "1.2026.01.10.1649",
+      "message": "Merge pull request #36 from ShejulShubham/development/dark-mode\n\nFixed Mobile View",
+      "timestamp": "2026-01-10T16:49:41.040Z"
+    },
     {
       "version": "1.2026.01.10.1422",
       "message": "Merge pull request #35 from ShejulShubham/development/dark-mode\n\nAdded Dark Mode.",
