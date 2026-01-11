@@ -4,11 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import DarkMode from "./DarkMode";
 
 export default function Header() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
   
   // Render minimal home header on home page
-  if (location.pathname === '/') {
+  if (pathname === '/') {
     return (
       <header className="fixed w-full flex justify-between flex-wrap">
         <div className="m-1 px-2 flex item-center max-w-6xl">
@@ -24,13 +23,7 @@ export default function Header() {
     );
   }
 
-  function handleLogout() {
-    if (handleSignOut()) {
-      navigate("/login");
-    }
-  }
-
   return (
-      <NavBar handleLogout={handleLogout} />
+      <NavBar />
   );
 }
