@@ -9,7 +9,7 @@ export default function Header() {
   // Render minimal home header on home page
   if (pathname === '/') {
     return (
-      <header className="fixed w-full flex justify-between flex-wrap">
+      <header className="fixed w-full flex justify-between flex-wrap transition-colors duration-300 ease-in-out">
         <div className="m-1 px-2 flex item-center max-w-6xl">
           {/* Logo */}
           <div className="text-xl font-light text-gray-900 tracking-tight">

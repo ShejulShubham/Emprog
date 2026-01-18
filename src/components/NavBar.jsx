@@ -15,7 +15,7 @@ const NavBar = () => {
   }
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-gray-950 text-white shadow-lg z-50">
+    <header className="fixed top-0 left-0 w-full bg-gray-950 text-white shadow-lg z-50 transition-colors duration-300 ease-in-out">
       <nav className="px-4 flex justify-between items-center flex-wrap">
         {/* Logo */}
         <div className="text-xl font-bold cursor-default">
