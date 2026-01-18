@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
 import ItemCard from "../components/ItemCard";
@@ -41,10 +41,14 @@ const typeIcons = {
 export default function Dashboard() {
   usePageTitle("Dashboard");
 
+  // TODO: Minimize the re-renders
+
   const { openModal, closeModal } = useModal();
   const [items, setItems] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const [isSortAToZ, setIsSortAToZ] = useState(true);
+  const sortingRef = useRef(null);
 
   const { showLoading, hideLoading } = useLoading();
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
@@ -175,7 +179,15 @@ export default function Dashboard() {
     setIsExporting(false);
   };
 
+  function triggerSortingGroup() {
+    const isAscending = sortingRef.current.value == "asc";
+    setIsSortAToZ(isAscending ? true : false);
+  }
+
+
   const groupedItems = groupItemsByType(items);
+
+  const sortedGroupedItems = isSortAToZ ? (Object.keys(groupedItems)) : (Object.keys(groupedItems).reverse());
 
   return (
     <div className="min-h-screen p-4 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
@@ -204,30 +216,51 @@ export default function Dashboard() {
             ))}
           </div>
         ) : Object.keys(groupedItems).length > 0 ? (
-          Object.keys(groupedItems).map((type) => (
-            <div key={type} className="mb-8">
-              {/* Section Header */}
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
-                {typeIcons[type] || (
-                  <PlayCircle className="w-5 h-5 inline mr-1 text-gray-500 dark:text-gray-400" />
-                )}
-                {type}
-              </h2>
+          <>
+          {/* Sort Group By */}
+            <div className="flex flex-col gap-2 my-4">
+              <label
+                htmlFor="sort-select"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Sort Group by:
+              </label>
 
-              {/* Items Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {groupedItems[type].map((item) => (
-                  <ItemCard
-                    key={item.id}
-                    item={item}
-                    onItemUpdated={handleItemUpdated}
-                    onUpdateItem={handleUpdateItem}
-                    onDeleteItem={handleDeleteItem}
-                  />
-                ))}
-              </div>
+              <select
+                id="sort-select"
+                onChange={triggerSortingGroup}
+                ref={sortingRef}
+                className="block max-w-fit appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-8 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 transition-colors duration-200 cursor-pointer"
+              >
+                <option value="asc">A to Z</option>
+                <option value="desc">Z to A</option>
+              </select>
             </div>
-          ))
+            {sortedGroupedItems.map((type) => (
+              <div key={type} className="mb-8">
+                {/* Section Header */}
+                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+                  {typeIcons[type] || (
+                    <PlayCircle className="w-5 h-5 inline mr-1 text-gray-500 dark:text-gray-400" />
+                  )}
+                  {type}
+                </h2>
+
+                {/* Items Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {groupedItems[type].map((item) => (
+                    <ItemCard
+                      key={item.id}
+                      item={item}
+                      onItemUpdated={handleItemUpdated}
+                      onUpdateItem={handleUpdateItem}
+                      onDeleteItem={handleDeleteItem}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </>
         ) : (
           <div className="text-center py-20">
             <p className="text-gray-500 dark:text-gray-400 italic text-lg">
