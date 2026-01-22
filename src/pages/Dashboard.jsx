@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
 import ItemCard from "../components/ItemCard";
@@ -6,7 +6,11 @@ import ItemForm from "../components/ItemForm";
 import ItemSkeleton from "../components/skeletons/ItemSkeleton";
 import ActionMenu from "../components/ActionMenu";
 import { useModal } from "../context/modalContext";
-import { downloadItemsAsJSON, fetchItems, deleteExistingItem } from "../utils/watchlistHandler";
+import {
+  downloadItemsAsJSON,
+  fetchItems,
+  deleteExistingItem,
+} from "../utils/watchlistHandler";
 import { useLoading } from "../context/loadingContext";
 import useAuthStore, { selectIsLoggedIn } from "../store/useAuthStore";
 import {
@@ -20,39 +24,52 @@ import {
   Layers,
   FileText,
   PlayCircle,
-  RotateCcw,
-  FileDown,
 } from "lucide-react";
 
 const typeIcons = {
   Movie: <Film className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Documentary: <Film className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Documentary: (
+    <Film className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
   Series: <Tv className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
   Anime: <Tv className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Podcast: <Mic className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Audiobook: <Headphones className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Lecture: <GraduationCap className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Course: <Layers className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Manga: <BookOpen className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Webtoon: <Book className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
-  Other: <FileText className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />,
+  Podcast: (
+    <Mic className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
+  Audiobook: (
+    <Headphones className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
+  Lecture: (
+    <GraduationCap className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
+  Course: (
+    <Layers className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
+  Manga: (
+    <BookOpen className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
+  Webtoon: (
+    <Book className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
+  Other: (
+    <FileText className="w-4 h-4 inline mr-1 text-gray-600 dark:text-white" />
+  ),
 };
 
 export default function Dashboard() {
   usePageTitle("Dashboard");
 
-  // TODO: Minimize the re-renders
-
   const { openModal, closeModal } = useModal();
   const [items, setItems] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
-  const [isSortAToZ, setIsSortAToZ] = useState(true);
-  const sortingRef = useRef(null);
+  const [sortBy, setSortBy] = useState("default");
 
   const { showLoading, hideLoading } = useLoading();
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
   const navigate = useNavigate();
+
+  let sortedGroupedItems = [];
 
   const handleGetStarted = () => {
     if (!isLoggedIn) navigate("/login");
@@ -129,7 +146,8 @@ export default function Dashboard() {
           Confirm Deletion
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Are you sure you want to delete this item? This action cannot be undone.
+          Are you sure you want to delete this item? This action cannot be
+          undone.
         </p>
 
         <div className="flex justify-center gap-4">
@@ -172,22 +190,51 @@ export default function Dashboard() {
     }, {});
   };
 
-
   const handleExport = async () => {
     setIsExporting(true);
     await downloadItemsAsJSON();
     setIsExporting(false);
   };
 
-  function triggerSortingGroup() {
-    const isAscending = sortingRef.current.value == "asc";
-    setIsSortAToZ(isAscending ? true : false);
+  function triggerSortingGroup(filter) {
+
+    switch (filter) {
+      case "asc":
+        return items.sort((a, b) => a.title.localeCompare(b.title));
+
+      case "des":
+        return items.sort((a, b) => b.title.localeCompare(a.title));
+
+      case "created-time-asc":
+        return items.sort(
+          (a, b) => new Date(a.create_date) - new Date(b.create_date)
+        );
+
+      case "created-time-des":
+        return items.sort(
+          (a, b) => new Date(b.create_date) - new Date(a.create_date)
+        );
+
+      case "updated-time-asc":
+        return items.sort(
+          (a, b) => new Date(a.update_date) - new Date(b.update_date)
+        );
+
+      case "updated-time-des":
+        return items.sort(
+          (a, b) => new Date(b.update_date) - new Date(a.update_date)
+        );
+
+      default:
+        return groupItemsByType(items);
+    }
   }
 
+  function handleSorting(event) {
+    setSortBy(event.target.value);
+  }
 
-  const groupedItems = groupItemsByType(items);
-
-  const sortedGroupedItems = isSortAToZ ? (Object.keys(groupedItems)) : (Object.keys(groupedItems).reverse());
+  sortedGroupedItems = triggerSortingGroup(sortBy);
 
   return (
     <div className="min-h-screen p-4 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
@@ -195,7 +242,9 @@ export default function Dashboard() {
       <div className="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-white p-6 shadow-sm flex justify-between items-center rounded-xl transition-colors duration-300">
         <div>
           <h1 className="text-2xl font-bold">Your Watchlist</h1>
-          <p className="text-gray-600 dark:text-gray-400">Track your shows, movies, and more.</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Track your shows, movies, and more.
+          </p>
         </div>
         <button
           className="bg-gray-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg font-medium shadow-md hover:bg-gray-800 dark:hover:bg-gray-100 transform transition-all duration-300 ease-in hover:scale-105"
@@ -215,51 +264,70 @@ export default function Dashboard() {
               <ItemSkeleton key={index} />
             ))}
           </div>
-        ) : Object.keys(groupedItems).length > 0 ? (
+        ) : Object.keys(sortedGroupedItems).length > 0 ? (
           <>
-          {/* Sort Group By */}
-            <div className="flex flex-col gap-2 my-4">
+            {/* Sort Group By */}
+            <div className="flex gap-2 my-4">
               <label
                 htmlFor="sort-select"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="text-sm font-medium my-auto text-gray-700 dark:text-gray-300"
               >
-                Sort Group by:
+                Sort:
               </label>
 
               <select
                 id="sort-select"
-                onChange={triggerSortingGroup}
-                ref={sortingRef}
+                onChange={handleSorting}
                 className="block max-w-fit appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-8 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 transition-colors duration-200 cursor-pointer"
               >
+                <option value="default">Default</option>
                 <option value="asc">A to Z</option>
-                <option value="desc">Z to A</option>
+                <option value="des">Z to A</option>
+                <option value="created-time-asc">First Created First</option>
+                <option value="created-time-des">Last Created First</option>
+                <option value="updated-time-asc">First Updated First </option>
+                <option value="updated-time-des">Last Updated First</option>
               </select>
             </div>
-            {sortedGroupedItems.map((type) => (
-              <div key={type} className="mb-8">
-                {/* Section Header */}
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
-                  {typeIcons[type] || (
-                    <PlayCircle className="w-5 h-5 inline mr-1 text-gray-500 dark:text-gray-400" />
-                  )}
-                  {type}
-                </h2>
 
-                {/* Items Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {groupedItems[type].map((item) => (
-                    <ItemCard
-                      key={item.id}
-                      item={item}
-                      onItemUpdated={handleItemUpdated}
-                      onUpdateItem={handleUpdateItem}
-                      onDeleteItem={handleDeleteItem}
-                    />
-                  ))}
+            {sortBy == "default" ? (
+              Object.keys(sortedGroupedItems).map((type) => (
+                <div key={type} className="mb-8">
+                  {/* Section Header */}
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+                    {typeIcons[type] || (
+                      <PlayCircle className="w-5 h-5 inline mr-1 text-gray-500 dark:text-gray-400" />
+                    )}
+                    {type}
+                  </h2>
+
+                  {/* Items Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {sortedGroupedItems[type].map((item) => (
+                      <ItemCard
+                        key={item.id}
+                        item={item}
+                        onItemUpdated={handleItemUpdated}
+                        onUpdateItem={handleUpdateItem}
+                        onDeleteItem={handleDeleteItem}
+                      />
+                    ))}
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sortedGroupedItems.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    onItemUpdated={handleItemUpdated}
+                    onUpdateItem={handleUpdateItem}
+                    onDeleteItem={handleDeleteItem}
+                  />
+                ))}
               </div>
-            ))}
+            )}
           </>
         ) : (
           <div className="text-center py-20">
