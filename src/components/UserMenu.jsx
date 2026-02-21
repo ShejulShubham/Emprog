@@ -64,9 +64,8 @@ export default function UserMenu({ toggleDirectToDashboard, isDirectToDashboard 
 
                     {/* Actions */}
                     <div className="space-y-2">
-                        {/* TODO: Create this as toggle button */}
-                        { pathname === "/dashboard" && <label className="px-2 flex justify-between">
-                            Direct To Dashboard
+                        { pathname !== "/" && <label className="px-2 flex justify-between">
+                            Lock this Page
                             <button
                                 onClick={toggleDirectToDashboard}
                                 className={
