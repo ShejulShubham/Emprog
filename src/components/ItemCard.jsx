@@ -141,7 +141,7 @@ export default function ItemCard({
   return (
     <div
       id={item.id}
-      className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:scale-105 hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
+      className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
     >
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
         {title}

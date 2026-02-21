@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useModal } from "../context/modalContext";
 
 const Modal = () => {
-  const { isOpen, content, closeModal } = useModal();
+  const { isOpen, content, closeModal, showCrossRef } = useModal();
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Modal = () => {
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
         tabIndex={-1} // Makes the div focusable
       >
-        <div className="absolute right-0 top-0 m-2">
+        {showCrossRef.current && <div className="absolute right-0 top-0 m-2">
           {/* Close Icon (X) */}
           <button
             className="focus:outline-none text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors"
@@ -60,9 +60,7 @@ const Modal = () => {
               />
             </svg>
           </button>
-        </div>
-
-        {/* This ensures any content injected into the modal respects dark mode text colors */}
+        </div>}
         <div className="text-gray-900 dark:text-white">
           {content}
         </div>
