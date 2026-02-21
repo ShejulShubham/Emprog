@@ -1,6 +1,7 @@
 import { updateExistingItem } from "../utils/watchlistHandler";
 import { formatTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
+import { SquarePen, Trash } from "lucide-react";
 
 export default function ItemCard({
   item,
@@ -75,7 +76,7 @@ export default function ItemCard({
       case "Movie":
       case "Documentary":
         return (
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
+          <p className={progressContainerClass}>
             Progress:{" "}
             <span className="font-semibold text-blue-600 dark:text-blue-400">
               <Badge color="blue">{formatTime(progress.time)}</Badge>
@@ -141,29 +142,19 @@ export default function ItemCard({
   return (
     <div
       id={item.id}
-      className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
+      className="relative bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
     >
+      <SquarePen className="w-5 h-5 float-right dark:text-white" onClick={() => { onUpdateItem(item) }} />
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
         {title}
       </h2>
       <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Type: {type}</p>
 
-      <div className="mb-6">{showInfoByType()}</div>
-
-      <div className="flex justify-between gap-2">
-        <button
-          onClick={() => onUpdateItem(item)}
-          className="flex-1 px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white text-sm font-semibold rounded-full shadow-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-all active:scale-95"
-        >
-          Update
-        </button>
-        <button
-          onClick={() => onDeleteItem(item.id)}
-          className="flex-1 px-4 py-2 bg-red-600 dark:bg-red-900/40 text-white dark:text-red-400 text-sm font-semibold rounded-full shadow-md hover:bg-red-700 dark:hover:bg-red-900/60 transition-all active:scale-95 border border-transparent dark:border-red-900/50"
-        >
-          Delete
-        </button>
+      <div className="mb-6">
+        {showInfoByType()}
       </div>
+      <Trash className="float-right text-red-400" onClick={() => onDeleteItem(item.id)} />
+
     </div>
   );
 }

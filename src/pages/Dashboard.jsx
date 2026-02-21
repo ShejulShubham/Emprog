@@ -148,7 +148,7 @@ export default function Dashboard() {
   // ✅ Delete item with confirmation popup
   const handleDeleteItem = (id) => {
     openModal(
-      <div className="p-6 bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-md w-full text-center border border-transparent dark:border-slate-800 transition-all">
+      <div className="p-6 bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-md w-full text-center border border-transparent transition-all">
         <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
           Confirm Deletion
         </h2>
@@ -185,7 +185,8 @@ export default function Dashboard() {
             Delete
           </button>
         </div>
-      </div>
+      </div>,
+      false
     );
   };
 
