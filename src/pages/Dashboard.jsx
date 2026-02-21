@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
 import ItemCard from "../components/ItemCard";
@@ -68,6 +68,7 @@ export default function Dashboard() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [sortBy, setSortBy] = useState("default");
+  const inputRef = useRef(null);
   const [searchText, setSearchText] = useState("");
   let onSearch = false;
 
@@ -100,6 +101,27 @@ export default function Dashboard() {
       }
     };
     loadItems();
+
+    const handleKeyPress = (event) => {
+      if (event.key === "Escape") {
+        setIsExpanded(false);
+        inputRef.current?.blur(); // Remove focus
+      }
+
+      if (event.key === "/") {
+        event.preventDefault();
+        setIsExpanded(true);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
   }, []);
 
 
@@ -291,10 +313,13 @@ export default function Dashboard() {
               <>
                 <input
                   className={`
-                    transition-all duration-500 ease-in-out origin-right border rounded-lg bg-white dark:bg-gray-800 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500
+                    outline-none transition-all duration-500 ease-in-out origin-right border rounded-lg bg-white dark:bg-gray-800 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     ${isExpanded ? 'w-1/2 md:w-3/4 px-4 py-2 opacity-100' : 'w-0 p-0 opacity-0 border-none'}
                   `}
-                  placeholder="Search" onChange={(e) => setSearchText(e.target.value)} value={searchText} />
+                  placeholder="Search"
+                  ref={inputRef}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  value={searchText} />
               </>
 
               {!onSearch ?
@@ -305,7 +330,7 @@ export default function Dashboard() {
             </label>
             <div className="group relative inline">
               <RefreshCcw size={18} className="inline-block w-7 h-7 ml-2 -mt-2" onClick={reloadItemsFromCloud} />
-              <span className="absolute -top-1 left-2 scale-0 transition-all rounded bg-gray-900 dark:bg-slate-800 p-2 text-xs text-white group-hover:scale-100 z-50 whitespace-nowrap shadow-lg">
+              <span className="absolute -top-1 left-12 scale-0 transition-all rounded bg-gray-900 dark:bg-slate-800 p-2 text-xs text-white group-hover:scale-100 z-50 whitespace-nowrap shadow-lg">
                 Sync Watchlist
               </span>
             </div>
@@ -334,7 +359,7 @@ export default function Dashboard() {
                 <select
                   id="sort-select"
                   onChange={handleSorting}
-                  className="block max-w-fit appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-8 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 transition-colors duration-200 cursor-pointer"
+                  className="outline-none block max-w-fit appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-8 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 transition-colors duration-200 cursor-pointer"
                 >
                   <option value="default">Default</option>
                   <option value="asc">A to Z</option>
