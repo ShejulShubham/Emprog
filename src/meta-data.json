@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2026.01.22.1842",
-    "message": "Merge pull request #42 from ShejulShubham/fix/sorting-watchlist\n\n[Fix] Watchlist Sorting",
-    "timestamp": "2026-01-22T18:42:42.958Z"
+    "version": "1.2026.02.21.0832",
+    "message": "Merge pull request #48 from ShejulShubham/fix/small-bugs\n\n[Fix] Small Fixes",
+    "timestamp": "2026-02-21T08:32:26.025Z"
   },
   "history": [
+    {
+      "version": "1.2026.02.21.0832",
+      "message": "Merge pull request #48 from ShejulShubham/fix/small-bugs\n\n[Fix] Small Fixes",
+      "timestamp": "2026-02-21T08:32:26.025Z"
+    },
     {
       "version": "1.2026.01.22.1842",
       "message": "Merge pull request #42 from ShejulShubham/fix/sorting-watchlist\n\n[Fix] Watchlist Sorting",
