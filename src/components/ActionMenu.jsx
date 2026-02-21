@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreVertical, Download, Upload, RotateCcw } from 'lucide-react'; // Using Lucide icons
+import { MoreVertical, Download } from 'lucide-react'; // Using Lucide icons
 
-const ActionMenu = ({ onDownload, onReload }) => {
+const ActionMenu = ({ onDownload }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -16,7 +16,7 @@ const ActionMenu = ({ onDownload, onReload }) => {
   }, []);
 
   return (
-    <div className="relative inline-block float-right" ref={menuRef}>
+    <div className="relative inline-block" ref={menuRef}>
       {/* Trigger Button */}
       <div className="group relative flex flex-col items-center">
         <button
@@ -47,14 +47,6 @@ const ActionMenu = ({ onDownload, onReload }) => {
           >
             <Download size={18} className="mr-3 text-gray-500 dark:text-gray-400" />
             Export Watchlist
-          </button>
-
-          <button
-            onClick={() => { onReload(); setIsOpen(false); }}
-            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            <RotateCcw size={18} className="mr-3 text-gray-500 dark:text-gray-400" />
-            Sync Watchlist
           </button>
         </div>
       )}

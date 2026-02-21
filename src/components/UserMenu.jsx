@@ -37,8 +37,6 @@ export default function UserMenu({ toggleDirectToDashboard, isDirectToDashboard 
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    console.log("Path: ", pathname);
-
     return (
         <div className="relative" ref={menuRef}>
             {/* Profile Avatar */}
