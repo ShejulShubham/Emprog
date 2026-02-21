@@ -78,7 +78,7 @@ export default function ItemCard({
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Progress:{" "}
             <span className="font-semibold text-blue-600 dark:text-blue-400">
-              {formatTime(progress.time)}
+              <Badge color="blue">{formatTime(progress.time)}</Badge>
             </span>
           </p>
         );
