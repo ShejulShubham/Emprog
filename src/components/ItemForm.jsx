@@ -238,7 +238,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-lg max-w-md mx-auto space-y-5 border border-transparent dark:border-slate-800 transition-colors duration-300"
+      className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-lg max-w-md mx-auto space-y-5 border border-transparent transition-colors duration-300"
     >
       <h2 className="text-2xl font-semibold text-gray-800 dark:text-white text-center">
         {isEditMode ? "Update Entry" : "Add New Entry"}

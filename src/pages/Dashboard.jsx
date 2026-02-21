@@ -24,6 +24,7 @@ import {
   Layers,
   FileText,
   PlayCircle,
+  Info,
 } from "lucide-react";
 
 const typeIcons = {
@@ -94,6 +95,12 @@ export default function Dashboard() {
     };
     loadItems();
   }, []);
+
+  function showInfo(){
+    openModal(
+      <p className="p-2 text-center">If your are using multiple devices Please <strong>Sync Watchlist</strong> using more option on the right</p>, false
+    );
+  }
 
   const reloadItemsFromCloud = async () => {
     try {
@@ -255,7 +262,6 @@ export default function Dashboard() {
       </div>
 
       <div className="m-3">
-        {/* Action Menu (Ensure this component also has dark: classes inside it) */}
         <ActionMenu onDownload={handleExport} onReload={reloadItemsFromCloud} />
 
         {isInitialLoad ? (
@@ -288,7 +294,9 @@ export default function Dashboard() {
                 <option value="updated-time-asc">First Updated First </option>
                 <option value="updated-time-des">Last Updated First</option>
               </select>
+              <Info className="relative w-6 h-6 inline-block my-auto text-yellow-600 dark:text-yellow" onClick={showInfo} />
             </div>
+
 
             {sortBy == "default" ? (
               Object.keys(sortedGroupedItems).map((type) => (
