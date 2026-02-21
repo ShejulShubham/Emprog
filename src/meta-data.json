@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2026.02.21.0832",
-    "message": "Merge pull request #48 from ShejulShubham/fix/small-bugs\n\n[Fix] Small Fixes",
-    "timestamp": "2026-02-21T08:32:26.025Z"
+    "version": "1.2026.02.21.0854",
+    "message": "Merge pull request #49 from ShejulShubham/fix/watchlist-item\n\n[Fix] Watchlist Item",
+    "timestamp": "2026-02-21T08:54:04.078Z"
   },
   "history": [
+    {
+      "version": "1.2026.02.21.0854",
+      "message": "Merge pull request #49 from ShejulShubham/fix/watchlist-item\n\n[Fix] Watchlist Item",
+      "timestamp": "2026-02-21T08:54:04.078Z"
+    },
     {
       "version": "1.2026.02.21.0832",
       "message": "Merge pull request #48 from ShejulShubham/fix/small-bugs\n\n[Fix] Small Fixes",
