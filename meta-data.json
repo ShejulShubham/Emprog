@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2026.03.03.1603",
-    "message": "Manual build or no description provided",
-    "timestamp": "2026-03-03T16:03:30.516Z"
+    "version": "1.2026.03.03.1604",
+    "message": "- Support for Progressive Web App is live now.",
+    "timestamp": "2026-03-03T16:04:58.499Z"
   },
   "history": [
+    {
+      "version": "1.2026.03.03.1604",
+      "message": "- Support for Progressive Web App is live now.",
+      "timestamp": "2026-03-03T16:04:58.499Z"
+    },
     {
       "version": "1.2026.03.03.1603",
       "message": "Manual build or no description provided",
