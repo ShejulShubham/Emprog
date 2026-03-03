@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import RedirectIfNeeded from "./components/RouteGuard";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./layout/MainLayout";
+import WatchlistTabs from "./components/WatchlistTabs";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/auth" element={<Auth isRegistration={true} />} />
             <Route path="/login" element={<Auth />} />
+            <Route path="/watchlist-tabs" element={<WatchlistTabs />} />
           </Route>
 
           {/* GROUP 2: Standalone Pages */}
