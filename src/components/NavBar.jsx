@@ -22,13 +22,13 @@ const NavBar = () => {
           {isDirectToDashboard ? (
             <>
             <div className="group relative" >
-              <img className="h-20 w-20 " src="logo_text.png" alt="logo" />
+              <img className="h-20 w-20 " src="logo_text.webp" alt="logo" />
               <span className="absolute -bottom-10 scale-0 transition-all rounded bg-red-900 dark:bg-red-800 p-2 text-xs lg:text-md text-white group-hover:scale-100 z-50 whitespace-nowrap shadow-lg">This Page is Locked</span>
             </div>
             </>
           ) : (
             <NavLink to="/">
-              <img className="h-20 w-20 " src="logo_text.png" alt="logo" />
+              <img className="h-20 w-20 " src="logo_text.webp" alt="logo" />
             </NavLink>
           )}
         </div>

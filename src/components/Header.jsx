@@ -13,7 +13,7 @@ export default function Header() {
         <div className="m-1 px-2 flex item-center max-w-6xl">
           {/* Logo */}
           <div className="text-xl font-light text-gray-900 tracking-tight">
-            <img className="h-20 w-20" src="logo_text.png" alt="logo" />
+            <img className="h-20 w-20" src="logo_text.webp" alt="logo" />
           </div>
         </div>
         <div className="m-1 px-2 flex item-center max-w-6xl scale-75">
