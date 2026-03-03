@@ -1,0 +1,22 @@
+# 1. Handle React Router (SPA Redirects)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 2. PWA Headers
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
