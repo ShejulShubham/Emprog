@@ -42,19 +42,27 @@ jobs:
             const hours = String(now.getHours()).padStart(2, "0");
             const minutes = String(now.getMinutes()).padStart(2, "0");
             const newVersion = `${meta.major}.${year}.${month}.${day}.${hours}${minutes}`;
+
+            // 3. Extract only the extended message (body)
+            const fullMsg = process.env.COMMIT_MSG || "";
             
-            // 3. Create the new entry
+            // Split by newline: index 0 is subject, the rest is the body
+            const lines = fullMsg.split("\n");
+            
+            // Slice from index 1 to skip the subject, then join and trim
+            const extendedMessage = lines.slice(1).join("\n").trim() || "Manual build or no description provided";
+
             const newEntry = {
               version: newVersion,
-              message: process.env.COMMIT_MSG || "Manual build",
+              message: extendedMessage,
               timestamp: now.toISOString()
             };
 
             // 4. Update History
             if (!meta.history) meta.history = [];
-            meta.history.unshift(newEntry);
+              meta.history.unshift(newEntry);
             if (meta.history.length > 50) meta.history = meta.history.slice(0, 50);
-            meta.latest = newEntry;
+              meta.latest = newEntry;
             
             // 5. Write files
             const output = JSON.stringify(meta, null, 2);
