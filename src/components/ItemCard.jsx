@@ -6,6 +6,8 @@ import { SquarePen, Trash } from "lucide-react";
 export default function ItemCard({
   item,
   onItemUpdated,
+  onUpdateItem,
+  onDeleteItem
 }) {
   const { title, type, progress } = item;
 
@@ -139,11 +141,17 @@ export default function ItemCard({
       id={item.id}
       className="relative bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
     >
-      <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-        {title} 
+      <SquarePen className="w-5 h-5 float-right dark:text-white" onClick={() => { onUpdateItem(item) }} />
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+        {title}
       </h2>
-      <p className="text-left text-gray-600 text-sm mb-2">Type: {type}</p>
-      <div>{showInfoByType()}</div>
+      <p className="text-gray-600 dark:text-gray-400 text-sm text-left mb-4">Type: {type}</p>
+
+      <div className="mb-6">
+        {showInfoByType()}
+      </div>
+      <Trash className="float-right text-red-400" onClick={() => onDeleteItem(item.id)} />
+
     </div>
   );
 }

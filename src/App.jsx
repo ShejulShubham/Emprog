@@ -29,7 +29,6 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/auth" element={<Auth isRegistration={true} />} />
             <Route path="/login" element={<Auth />} />
-            <Route path="/watchlist-tabs" element={<WatchlistTabs />} />
           </Route>
 
           {/* GROUP 2: Standalone Pages */}
