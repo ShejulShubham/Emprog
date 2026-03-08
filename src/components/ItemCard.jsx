@@ -7,7 +7,7 @@ export default function ItemCard({
   item,
   onItemUpdated,
   onUpdateItem,
-  onDeleteItem,
+  onDeleteItem
 }) {
   const { title, type, progress } = item;
 
@@ -34,9 +34,6 @@ export default function ItemCard({
         },
         update_date: now,
       };
-
-      // console.log("existing item: ", item);
-      // console.log("updated item ", updatedData);
 
       await updateExistingItem(item.id, updatedData);
 
@@ -148,7 +145,7 @@ export default function ItemCard({
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
         {title}
       </h2>
-      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Type: {type}</p>
+      <p className="text-gray-600 dark:text-gray-400 text-sm text-left mb-4">Type: {type}</p>
 
       <div className="mb-6">
         {showInfoByType()}

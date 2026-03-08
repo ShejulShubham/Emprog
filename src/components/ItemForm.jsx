@@ -301,8 +301,8 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
       {/* Submit/Loading Button */}
       {isLoading ? (
         <button
-          className="w-full bg-blue-800 dark:bg-blue-900 text-white py-2 rounded-lg font-medium transition-colors cursor-not-allowed opacity-70"
-          disabled
+          className="w-full bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-not-allowed"
+          disabled={true}
         >
           {isEditMode ? "Updating..." : "Submitting..."}
         </button>

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import RedirectIfNeeded from "./components/RouteGuard";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./layout/MainLayout";
+import WatchlistTabs from "./components/WatchlistTabs";
 
 function App() {
   return (
