@@ -1,7 +1,115 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { addNewItem, updateExistingItem } from "../utils/watchlistHandler";
-import { normalizeTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
+
+const TimeOTPInput = ({ value = "00:00:00", onChange }) => {
+  // Convert "HH:MM:SS" string to an array of 6 single digits
+  const digits = value.replace(/:/g, "").padStart(6, "0").split("");
+  const inputRefs = useRef([]);
+
+  const handleChange = (index, e) => {
+    const val = e.target.value.slice(-1); // Get the last character typed
+    if (!/^\d$/.test(val) && val !== "") return; // Allow only digits
+
+    const newDigits = [...digits];
+    let processedVal = val;
+
+    // --- Normalization Logic ---
+    // Minutes (idx 2) and Seconds (idx 4) tens-place cannot exceed 5
+    if ((index === 2 || index === 4) && parseInt(val) > 5) {
+      processedVal = "5";
+    }
+
+    newDigits[index] = processedVal || "0";
+    
+    // Join back to HH:MM:SS
+    const timeString = `${newDigits[0]}${newDigits[1]}:${newDigits[2]}${newDigits[3]}:${newDigits[4]}${newDigits[5]}`;
+    onChange(timeString);
+
+    // MOVE FOCUS: Use setTimeout to ensure the modal re-render has finished
+    if (processedVal !== "" && index < 5) {
+      setTimeout(() => {
+        inputRefs.current[index + 1]?.focus();
+      }, 0);
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace") {
+      // If current field is empty/zero, move back
+      if (digits[index] === "0" || digits[index] === "") {
+        if (index > 0) {
+          setTimeout(() => {
+            inputRefs.current[index - 1]?.focus();
+          }, 0);
+        }
+      }
+    } else if (e.key === "ArrowLeft" && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === "ArrowRight" && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  return (
+    <div className="flex justify-center items-center gap-1">
+      {/* Hours */}
+      <div className="flex flex-1 gap-1">
+        {[0, 1].map((idx) => (
+          <input
+            key={idx}
+            ref={(el) => (inputRefs.current[idx] = el)}
+            type="text"
+            inputMode="numeric"
+            value={digits[idx]}
+            onChange={(e) => handleChange(idx, e)}
+            onKeyDown={(e) => handleKeyDown(idx, e)}
+            onFocus={(e) => e.target.select()}
+            className="w-9 h-11 flex-1 text-center text-lg font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-md focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"
+          />
+        ))}
+      </div>
+
+      <span className="font-bold text-gray-400">:</span>
+
+      {/* Minutes */}
+      <div className="flex flex-1 gap-1">
+        {[2, 3].map((idx) => (
+          <input
+            key={idx}
+            ref={(el) => (inputRefs.current[idx] = el)}
+            type="text"
+            inputMode="numeric"
+            value={digits[idx]}
+            onChange={(e) => handleChange(idx, e)}
+            onKeyDown={(e) => handleKeyDown(idx, e)}
+            onFocus={(e) => e.target.select()}
+            className="w-9 h-11 flex-1 text-center text-lg font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-md focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"
+          />
+        ))}
+      </div>
+
+      <span className="font-bold text-gray-400">:</span>
+
+      {/* Seconds */}
+      <div className="flex flex-1 gap-1">
+        {[4, 5].map((idx) => (
+          <input
+            key={idx}
+            ref={(el) => (inputRefs.current[idx] = el)}
+            type="text"
+            inputMode="numeric"
+            value={digits[idx]}
+            onChange={(e) => handleChange(idx, e)}
+            onKeyDown={(e) => handleKeyDown(idx, e)}
+            onFocus={(e) => e.target.select()}
+            className="w-9 h-11 flex-1 text-center text-lg font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-md focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   const isEditMode = !!existingItem;
@@ -33,7 +141,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   const handleProgressChange = (field, value) => {
     setProgress((prev) => ({
       ...prev,
-      [field]: field === "time" ? normalizeTime(value) : value,
+      [field]: value,
     }));
   };
 
@@ -150,18 +258,30 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   };
 
   const renderDynamicFields = () => {
-    // Reusable component for form fields to keep code dry
+    // Reusable component for basic fields
     const InputField = ({ label, type = "text", value, placeholder, field }) => (
       <div className="mb-4">
-        <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
-          {label}
-        </label>
+        <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">{label}</label>
         <input
           type={type}
           value={value}
           onChange={(e) => handleProgressChange(field, e.target.value)}
-          placeholder={placeholder}
-          className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+          className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+        />
+      </div>
+    );
+
+    // Helper for the Time Input to keep the JSX clean
+    const TimeSection = ({ label }) => (
+      <div className="mb-4">
+        <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+          {label}
+        </label>
+        {/* Ensure we strip colons if your state stores it that way, 
+        or just pass the string if it's "HH:MM:SS" */}
+        <TimeOTPInput
+          value={progress.time || "00:00:00"}
+          onChange={(newTime) => handleProgressChange("time", newTime)}
         />
       </div>
     );
@@ -169,14 +289,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
     switch (type) {
       case "Movie":
       case "Documentary":
-        return (
-          <InputField
-            label="Time Progress"
-            value={progress.time}
-            field="time"
-            placeholder="e.g., 01:45:23"
-          />
-        );
+        return <TimeSection label="Time Progress" />
 
       case "Series":
       case "Anime":
@@ -184,7 +297,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
           <div className="space-y-4">
             <InputField label="Season" type="number" value={progress.season} field="season" placeholder="Enter season number" />
             <InputField label="Episode" type="number" value={progress.episode} field="episode" placeholder="Enter episode number" />
-            <InputField label="Time in Episode" value={progress.time} field="time" placeholder="e.g., 00:23:15" />
+            <TimeSection label="Time in Episode" />
           </div>
         );
 
@@ -192,7 +305,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <div className="space-y-4">
             <InputField label="Episode Number" type="number" value={progress.episode} field="episode" placeholder="Enter episode number" />
-            <InputField label="Time Progress" value={progress.time} field="time" placeholder="e.g., 00:15:30" />
+            <TimeSection label="Time Progress" />
           </div>
         );
 
@@ -200,7 +313,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <div className="space-y-4">
             <InputField label="Track Number" type="number" value={progress.track} field="track" placeholder="Enter track number" />
-            <InputField label="Time Progress" value={progress.time} field="time" placeholder="e.g., 00:30:15" />
+            <TimeSection label="Time Progress" />
           </div>
         );
 
@@ -209,7 +322,7 @@ const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
         return (
           <div className="space-y-4">
             <InputField label="Video Number" type="number" value={progress.videoNumber} field="videoNumber" placeholder="Enter video number" />
-            <InputField label="Time Progress" value={progress.time} field="time" placeholder="e.g., 00:10:05" />
+            <TimeSection label="Time Progress" />
           </div>
         );
 
