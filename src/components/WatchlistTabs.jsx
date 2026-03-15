@@ -52,9 +52,8 @@ const typeIcons = {
   ),
 };
 
-export default function WatchlistTabs({ items, handleItemAdded, isInitialLoad, reloadItemsFromCloud }) {
+export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdated, handleDeleteItem, isInitialLoad, reloadItemsFromCloud }) {
 
-  const { openModal, closeModal } = useModal();
   const [activeTab, setActiveTab] = useState('Ongoing');
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -161,70 +160,6 @@ export default function WatchlistTabs({ items, handleItemAdded, isInitialLoad, r
         return groupItemsByType(items);
     }
   }
-
-  // ✅ Update existing item
-  const handleItemUpdated = (updatedItem) => {
-    setItems((prevItems) =>
-      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
-    );
-    closeModal();
-  };
-
-  // ✅ Open modal in update mode
-  const handleUpdateItem = (item) => {
-    openModal(
-      <ItemForm
-        existingItem={item}
-        onItemAdded={handleItemAdded}
-        onItemUpdated={handleItemUpdated}
-      />
-    );
-  };
-
-  // ✅ Delete item with confirmation popup
-  const handleDeleteItem = (id) => {
-    openModal(
-      <div className="p-6 bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-md w-full text-center border border-transparent transition-all">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-          Confirm Deletion
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Are you sure you want to delete this item? This action cannot be
-          undone.
-        </p>
-
-        <div className="flex justify-center gap-4">
-          {/* Cancel Button */}
-          <button
-            className="bg-gray-200 dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-5 py-2 rounded hover:bg-gray-300 dark:hover:bg-slate-700 transition-colors"
-            onClick={closeModal}
-          >
-            Cancel
-          </button>
-
-          {/* Delete Button */}
-          <button
-            className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 dark:hover:bg-red-500 shadow-md shadow-red-500/20 transition-colors"
-            onClick={async () => {
-              try {
-                await deleteExistingItem(id);
-                setItems((prevItems) =>
-                  prevItems.filter((item) => item.id !== id)
-                );
-                closeModal();
-              } catch (error) {
-                console.error("Failed to delete item:", error);
-                closeModal();
-              }
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      </div>,
-      false
-    );
-  };
 
   function handleSorting(event) {
     setSortBy(event.target.value);
