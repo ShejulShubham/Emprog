@@ -114,6 +114,8 @@ const TimeOTPInput = ({ value = "00:00:00", onChange }) => {
 const ItemForm = ({ existingItem = null, onItemAdded, onItemUpdated }) => {
   const isEditMode = !!existingItem;
 
+  console.log("Existing: ", existingItem);
+
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [progress, setProgress] = useState({
