@@ -18,7 +18,7 @@ export default function ItemCard({
   const hasValidTime = progress.time && progress.time !== "00:00:00";
 
   // ✅ Mark item as Completed with confirmation popup
-  function handleCompleteItem(id) {
+  function handleCompleteItem() {
     openModal(
       <div className="p-6 bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-md w-full text-center border border-transparent transition-all">
         <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
@@ -165,9 +165,9 @@ export default function ItemCard({
       case "Podcast":
         return (
           <p className={progressContainerClass}>
-            {progress.season && <Badge>Season {progress.season}</Badge>}
+            {progress.season && <Badge onDoubleClick={()=>{updateItemField("season")}}>Season {progress.season}</Badge>}
             <Badge
-              onDoubleClick={updateOnDoubleClick}
+              onDoubleClick={()=>updateItemField("episode")}
               title="Double-click to increase episode"
             >
               Episode {progress.episode}
