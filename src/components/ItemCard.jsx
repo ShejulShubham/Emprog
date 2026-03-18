@@ -94,38 +94,6 @@ export default function ItemCard({
 
   }
 
-  async function updateOnDoubleClick() {
-    //TODO: Make this function work for other categories too
-
-    const now = new Date().toISOString();
-    showLoading();
-    try {
-      const updatedEpisode = String(Number(progress.episode) + 1);
-
-      const updatedData = {
-        title,
-        type,
-        progress: {
-          season: progress.season,
-          time: progress.time,
-          episode: updatedEpisode,
-          videoNumber: progress.videoNumber,
-        },
-        update_date: now,
-      };
-
-      await updateExistingItem(item.id, updatedData);
-
-      if (onItemUpdated) {
-        onItemUpdated({ ...updatedData, id: item.id });
-      }
-    } catch (error) {
-      console.error("Error saving item:", error);
-    } finally {
-      hideLoading();
-    }
-  }
-
   const showInfoByType = () => {
     // Helper for consistent badge styling
     const Badge = ({ children, color = "purple", onDoubleClick, title }) => {

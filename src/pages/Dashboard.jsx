@@ -21,6 +21,12 @@ export default function Watchlist() {
   const { showLoading, hideLoading } = useLoading();
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
   const navigate = useNavigate();
+  const [categorized, setCategorized] = useState({
+    ongoing: [],
+    completed: [],
+    watchlist: []
+  })
+
 
   const handleGetStarted = () => {
     if (!isLoggedIn) navigate("/login");
@@ -46,6 +52,32 @@ export default function Watchlist() {
 
   }, []);
 
+  useEffect(() => {
+    setCategorized(categorizeItems(items));
+  }, [items]);
+
+  function categorizeItems(items) {
+
+    const ongoing = [];
+    const completed = [];
+    const watchlist = [];
+
+    items.forEach((item) => {
+      // Normalize status to lowercase or use "ongoing" if missing/invalid
+      const status = (item.status || "ongoing").toLowerCase();
+
+      if (status === "completed" || status === "completed") {
+        completed.push(item);
+      } else if (status === "watchlist" || status === "plan to watch") {
+        watchlist.push(item);
+      } else {
+        // Default case: includes "ongoing", "watching", or undefined status
+        ongoing.push(item);
+      }
+    });
+
+    return { ongoing, completed, watchlist };
+  };
 
   const reloadItemsFromCloud = async () => {
     try {
@@ -56,7 +88,7 @@ export default function Watchlist() {
 
       const cloudItems = await fetchItems(fetchFromCloud);
 
-      setItems(cloudItems);
+      setCategorized({ ...categorizeItems(cloudItems) });
     } catch (error) {
       console.log(error.message);
     } finally {
@@ -155,7 +187,7 @@ export default function Watchlist() {
       </div>
 
       <WatchlistTabs
-        items={items}
+        categorized={categorized}
         handleItemUpdated={handleItemUpdated}
         handleUpdateItem={handleUpdateItem}
         handleDeleteItem={handleDeleteItem}

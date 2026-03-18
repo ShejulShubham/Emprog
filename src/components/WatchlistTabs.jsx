@@ -17,8 +17,6 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import ItemCard from './ItemCard';
-import { useModal } from '../context/modalContext';
-import ItemForm from './ItemForm';
 
 const tabs = ['Ongoing', 'Watchlist', 'Completed'];
 
@@ -52,19 +50,22 @@ const typeIcons = {
   ),
 };
 
-export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdated, handleDeleteItem, isInitialLoad, reloadItemsFromCloud }) {
+export default function WatchlistTabs({ categorized, handleUpdateItem, handleItemUpdated, handleDeleteItem, isInitialLoad, reloadItemsFromCloud }) {
 
   const [activeTab, setActiveTab] = useState('Ongoing');
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [sortBy, setSortBy] = useState("default");
 
+  const itemsCopy = categorized['ongoing'];
+  const completedItems = categorized['completed'];
+
+  const tabSwitchedRef = useRef([tabs[0]]);
   const inputRef = useRef(null);
 
   let onSearch = false;
   let sortedGroupedItems = [];
   let searchedItems = [];
-
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -80,18 +81,23 @@ export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdat
           inputRef.current?.focus();
         }, 100);
       }
-    };
 
+    };
     document.addEventListener("keydown", handleKeyPress);
 
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [])
+  }, []);
 
 
   function handleTabSwitch(event) {
-    setActiveTab(event.target.value);
+    const tabName = event.target.value.trim();
+    setActiveTab(tabName);
+
+    if(tabName != "ongoing" && !tabSwitchedRef.current.includes(tabName)){
+      tabSwitchedRef.current.push(tabName);
+    }
   }
 
   const handleExport = async () => {
@@ -115,7 +121,7 @@ export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdat
       onSearch = true;
       const keywords = search.split(/\s+/); // Split by spaces
 
-      searchedItems = items.filter((item) => {
+      searchedItems = itemsCopy.filter((item) => {
         const itemTitle = item.title.toLowerCase();
 
         // Check if EVERY keyword exists somewhere in the title
@@ -131,33 +137,33 @@ export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdat
 
     switch (filter) {
       case "asc":
-        return items.sort((a, b) => a.title.localeCompare(b.title));
+        return itemsCopy.sort((a, b) => a.title.localeCompare(b.title));
 
       case "des":
-        return items.sort((a, b) => b.title.localeCompare(a.title));
+        return itemsCopy.sort((a, b) => b.title.localeCompare(a.title));
 
       case "created-time-asc":
-        return items.sort(
+        return itemsCopy.sort(
           (a, b) => new Date(a.create_date) - new Date(b.create_date)
         );
 
       case "created-time-des":
-        return items.sort(
+        return itemsCopy.sort(
           (a, b) => new Date(b.create_date) - new Date(a.create_date)
         );
 
       case "updated-time-asc":
-        return items.sort(
+        return itemsCopy.sort(
           (a, b) => new Date(a.update_date) - new Date(b.update_date)
         );
 
       case "updated-time-des":
-        return items.sort(
+        return itemsCopy.sort(
           (a, b) => new Date(b.update_date) - new Date(a.update_date)
         );
 
       default:
-        return groupItemsByType(items);
+        return groupItemsByType(itemsCopy);
     }
   }
 
@@ -166,8 +172,10 @@ export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdat
   }
 
   // Execute Functions
-  sortedGroupedItems = triggerSortingGroup(sortBy);
-  handleSearch(searchText);
+  if (itemsCopy) {
+    sortedGroupedItems = triggerSortingGroup(sortBy);
+    handleSearch(searchText);
+  }
 
   return (
     <>
@@ -228,7 +236,7 @@ export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdat
                       }`}>
                       {tab}
                     </span>
-                    {tab != "Ongoing" && <div className="absolute right-0 top-0 z-10">
+                    {!tabSwitchedRef.current.includes(tab) && <div className="absolute right-0 top-0 z-10">
                       <div className="flex h-2 w-2 items-center justify-center">
                         <span
                           className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
@@ -353,11 +361,30 @@ export default function WatchlistTabs({ items, handleUpdateItem, handleItemUpdat
         )}
         {/* Tab Watchlist */}
         {activeTab == tabs[1] && (
-          <h2 className=" text-lg dark:text-white text-center">Great Things Come to Those Who Wait.</h2>
+          <>
+            <h2 className="text-lg dark:text-white text-center">Great Things Come to Those Who Wait.</h2>
+          </>
         )}
         {/* Tab Completed */}
         {activeTab == tabs[2] && (
-          <h2 className="text-lg dark:text-white text-center">Great Things Come to Those Who Wait.</h2>
+          <>
+            {completedItems.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {completedItems.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    onItemUpdated={handleItemUpdated}
+                    onUpdateItem={handleUpdateItem}
+                    onDeleteItem={handleDeleteItem}
+                  />
+                ))}
+              </div>
+            ) : (
+              <h2 className="text-lg dark:text-white text-center">Great Things Come to Those Who Wait.</h2>
+            )}
+
+          </>
         )}
       </div>
     </>
