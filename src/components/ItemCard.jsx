@@ -1,7 +1,7 @@
 import { updateExistingItem } from "../utils/watchlistHandler";
 import { formatTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
-import { SquareCheckBig, SquarePen, Trash } from "lucide-react";
+import { CircleCheck, CircleX, SquarePen, Trash } from "lucide-react";
 import { useModal } from "../context/modalContext";
 
 export default function ItemCard({
@@ -188,7 +188,11 @@ export default function ItemCard({
       id={item.id}
       className="relative bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
     >
-      <SquareCheckBig className="w-5 h-5 float-right text-green-400" title="Mark as Completed" onClick={() => handleCompleteItem(item.id)} />
+      {item?.status == "completed" ? (
+        <CircleX className="w-5 h-5 float-right text-yellow-400" title="Mark as Completed" onClick={() => handleCompleteItem(item.id)} />
+      ) : (
+        <CircleCheck className="w-5 h-5 float-right text-green-400" title="Mark as Completed" onClick={() => handleCompleteItem(item.id)} />
+      )}
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
         {title}
       </h2>
