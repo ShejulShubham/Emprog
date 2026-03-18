@@ -1,11 +1,16 @@
 {
   "major": 1,
   "latest": {
-    "version": "1.2026.03.15.1408",
-    "message": "- Item add, update and delete works as normal.\n- Time field now has OTP like input.",
-    "timestamp": "2026-03-15T14:08:33.579Z"
+    "version": "1.2026.03.18.1640",
+    "message": "- Watchlist now has ongoing, watchlist and complete status.\n- Watchlist status can be easily switched using button.",
+    "timestamp": "2026-03-18T16:40:35.195Z"
   },
   "history": [
+    {
+      "version": "1.2026.03.18.1640",
+      "message": "- Watchlist now has ongoing, watchlist and complete status.\n- Watchlist status can be easily switched using button.",
+      "timestamp": "2026-03-18T16:40:35.195Z"
+    },
     {
       "version": "1.2026.03.15.1408",
       "message": "- Item add, update and delete works as normal.\n- Time field now has OTP like input.",
