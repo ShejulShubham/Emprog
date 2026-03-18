@@ -1,7 +1,8 @@
 import { updateExistingItem } from "../utils/watchlistHandler";
 import { formatTime } from "../utils/timeFormatter";
 import { useLoading } from "../context/loadingContext";
-import { SquarePen, Trash } from "lucide-react";
+import { CircleCheck, CircleX, SquarePen, Trash } from "lucide-react";
+import { useModal } from "../context/modalContext";
 
 export default function ItemCard({
   item,
@@ -12,26 +13,71 @@ export default function ItemCard({
   const { title, type, progress } = item;
 
   const { showLoading, hideLoading } = useLoading();
+  const { openModal, closeModal } = useModal();
 
   const hasValidTime = progress.time && progress.time !== "00:00:00";
 
-  async function updateOnDoubleClick() {
-    //TODO: Make this function work for other categories too
+  // ✅ Mark item as Completed with confirmation popup
+  function handleCompleteItem() {
+    openModal(
+      <div className="p-6 bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-md w-full text-center border border-transparent transition-all">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Confirmation
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
+          Mark this item as {item?.status == "completed" ? "ongoing" : "complete"}
+        </p>
+
+        <div className="flex justify-center gap-4">
+          {/* Cancel Button */}
+          <button
+            className="bg-gray-200 dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-5 py-2 rounded hover:bg-gray-300 dark:hover:bg-slate-700 transition-colors"
+            onClick={closeModal}
+          >
+            Cancel
+          </button>
+
+          {/* Complete Button */}
+          <button
+            className={`text-white px-5 py-2 rounded shadow-md transition-colors  ${item?.status == "completed" ? "bg-yellow-600 shadow-yellow-500/20 hover:bg-y-700 dark:hover:bg-yellow-500" : "bg-green-600 shadow-green-500/20 hover:bg-green-700 dark:hover:bg-green-500"}`}
+            onClick={async () => {
+              try {
+                updateItemField("status");
+                closeModal();
+              } catch (error) {
+                console.error("Failed to update item:", error);
+                closeModal();
+              }
+            }}
+          >
+            {item?.status == "completed" ? "Ongoing" : "Complete"}
+          </button>
+        </div>
+      </div>,
+      false
+    );
+  }
+
+  async function updateItemField(updateField) {
 
     const now = new Date().toISOString();
     showLoading();
     try {
-      const updatedEpisode = String(Number(progress.episode) + 1);
+      // Update Field
+      const updatedEpisode = updateField == "episode" ? String(Number(progress.episode) + 1) : progress.episode;
+      const updatedSeason = updateField == "season" ? String(Number(progress.season) + 1) : progress.season;
+      const updatedItemStatus = updateField == "status" ? (item?.status == "completed" ? "ongoing" : "completed") : "ongoing";
 
       const updatedData = {
         title,
         type,
         progress: {
-          season: progress.season,
-          time: progress.time,
+          season: updatedSeason,
           episode: updatedEpisode,
+          time: progress.time,
           videoNumber: progress.videoNumber,
         },
+        status: updatedItemStatus,
         update_date: now,
       };
 
@@ -41,10 +87,11 @@ export default function ItemCard({
         onItemUpdated({ ...updatedData, id: item.id });
       }
     } catch (error) {
-      console.error("Error saving item:", error);
+      console.error(`Error updating ${updateField}:`, error);
     } finally {
       hideLoading();
     }
+
   }
 
   const showInfoByType = () => {
@@ -86,9 +133,9 @@ export default function ItemCard({
       case "Podcast":
         return (
           <p className={progressContainerClass}>
-            {progress.season && <Badge>Season {progress.season}</Badge>}
+            {progress.season && <Badge onDoubleClick={() => { updateItemField("season") }}>Season {progress.season}</Badge>}
             <Badge
-              onDoubleClick={updateOnDoubleClick}
+              onDoubleClick={() => updateItemField("episode")}
               title="Double-click to increase episode"
             >
               Episode {progress.episode}
@@ -141,7 +188,11 @@ export default function ItemCard({
       id={item.id}
       className="relative bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 transition-all transform hover:shadow-xl dark:shadow-black/20 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800"
     >
-      <SquarePen className="w-5 h-5 float-right dark:text-white" onClick={() => { onUpdateItem(item) }} />
+      {item?.status == "completed" ? (
+        <CircleX className="w-5 h-5 float-right text-yellow-400" title="Mark as Completed" onClick={() => handleCompleteItem(item.id)} />
+      ) : (
+        <CircleCheck className="w-5 h-5 float-right text-green-400" title="Mark as Completed" onClick={() => handleCompleteItem(item.id)} />
+      )}
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
         {title}
       </h2>
@@ -150,7 +201,8 @@ export default function ItemCard({
       <div className="mb-6">
         {showInfoByType()}
       </div>
-      <Trash className="float-right text-red-400" onClick={() => onDeleteItem(item.id)} />
+      <SquarePen className="w-5 h-5 float-left text-yellow-400" title="Update Item" onClick={() => { onUpdateItem(item) }} />
+      <Trash className="float-right text-red-400" title="Delete Item" onClick={() => onDeleteItem(item.id)} />
 
     </div>
   );
