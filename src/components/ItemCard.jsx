@@ -25,7 +25,7 @@ export default function ItemCard({
           Confirmation
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Mark this item as completed?
+          Mark this item as {item?.status == "completed" ? "ongoing" : "complete"}
         </p>
 
         <div className="flex justify-center gap-4">
@@ -39,7 +39,7 @@ export default function ItemCard({
 
           {/* Complete Button */}
           <button
-            className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 dark:hover:bg-green-500 shadow-md shadow-green-500/20 transition-colors"
+            className={`text-white px-5 py-2 rounded shadow-md transition-colors  ${item?.status == "completed" ? "bg-yellow-600 shadow-yellow-500/20 hover:bg-y-700 dark:hover:bg-yellow-500" : "bg-green-600 shadow-green-500/20 hover:bg-green-700 dark:hover:bg-green-500"}`}
             onClick={async () => {
               try {
                 updateItemField("status");
@@ -50,7 +50,7 @@ export default function ItemCard({
               }
             }}
           >
-            Complete
+            {item?.status == "completed" ? "Ongoing" : "Complete"}
           </button>
         </div>
       </div>,
@@ -66,7 +66,7 @@ export default function ItemCard({
       // Update Field
       const updatedEpisode = updateField == "episode" ? String(Number(progress.episode) + 1) : progress.episode;
       const updatedSeason = updateField == "season" ? String(Number(progress.season) + 1) : progress.season;
-      const updatedItemStatus = updateField == "status" ? "completed" : "ongoing";
+      const updatedItemStatus = updateField == "status" ? (item?.status == "completed" ? "ongoing" : "completed") : "ongoing";
 
       const updatedData = {
         title,
@@ -133,9 +133,9 @@ export default function ItemCard({
       case "Podcast":
         return (
           <p className={progressContainerClass}>
-            {progress.season && <Badge onDoubleClick={()=>{updateItemField("season")}}>Season {progress.season}</Badge>}
+            {progress.season && <Badge onDoubleClick={() => { updateItemField("season") }}>Season {progress.season}</Badge>}
             <Badge
-              onDoubleClick={()=>updateItemField("episode")}
+              onDoubleClick={() => updateItemField("episode")}
               title="Double-click to increase episode"
             >
               Episode {progress.episode}
