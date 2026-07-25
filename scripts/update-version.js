@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Resolve target meta-data paths
-const META_PATH = path.resolve(__dirname, "../client/src/meta-data.json");
+const META_PATH = path.resolve(__dirname, "../meta-data.json");
 
 function parseCommitMessage(fullMsg) {
   let userReleaseNotes = "Performance improvements and bug fixes.";
