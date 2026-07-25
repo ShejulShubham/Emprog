@@ -1,12 +1,17 @@
 {
   "major": 1,
-  "version": "1.6.3",
+  "version": "1.6.4",
   "latest": {
-    "version": "1.2026.03.18.1640",
-    "message": "- Watchlist now has ongoing, watchlist and complete status.\n- Watchlist status can be easily switched using button.",
-    "timestamp": "2026-03-18T16:40:35.195Z"
+    "version": "1.6.4",
+    "userNotes": "Performance improvements and bug fixes.",
+    "timestamp": "2026-07-25T08:38:05.120Z"
   },
   "history": [
+    {
+      "version": "1.6.4",
+      "userNotes": "Performance improvements and bug fixes.",
+      "timestamp": "2026-07-25T08:38:05.120Z"
+    },
     {
       "version": "1.2026.03.18.1640",
       "message": "- Watchlist now has ongoing, watchlist and complete status.\n- Watchlist status can be easily switched using button.",
